@@ -1,5 +1,3 @@
-/dist/
-/lib/
 /node_modules/
 /examples/tex/node_modules/
 /examples/draft-0-9-1/tex/node_modules/
@@ -10,8 +8,7 @@
 /examples/draft-0-10-0/universal/static
 /examples/draft-0-10-0/universal/yarn.lock
 /examples/draft-0-10-0/universal/node_modules
-/website/build/
 /website/node_modules/
-/website/src/lib/
 /website/src/docs/
 npm-debug.log
+.idea/
