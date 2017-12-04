@@ -1556,6 +1556,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.get('data');
 	  };
 
+	  ContentBlock.prototype.getParentKey = function getParentKey() {
+	    var key = this.getKey();
+	    var parts = key.split('/');
+
+	    return parts.slice(0, -1).join('/');
+	  };
+
+	  ContentBlock.prototype.hasParent = function hasParent() {
+	    return this.getParentKey() !== '';
+	  };
+
+	  ContentBlock.prototype.getInnerKey = function getInnerKey() {
+	    var key = this.getKey();
+	    var parts = key.split('/');
+
+	    return parts[parts.length - 1];
+	  };
+
 	  ContentBlock.prototype.getInlineStyleAt = function getInlineStyleAt(offset) {
 	    var character = this.getCharacterList().get(offset);
 	    return character ? character.getStyle() : EMPTY_SET;

@@ -84,6 +84,24 @@ class ContentBlock extends ContentBlockRecord implements BlockNode {
     return this.get('data');
   }
 
+  getParentKey(): string {
+    const key = this.getKey();
+    const parts = key.split('/');
+
+    return parts.slice(0, -1).join('/');
+  }
+
+  hasParent(): boolean {
+    return this.getParentKey() !== '';
+  }
+
+  getInnerKey(): string {
+    const key = this.getKey();
+    const parts = key.split('/');
+
+    return parts[parts.length - 1];
+  }
+
   getInlineStyleAt(offset: number): DraftInlineStyle {
     var character = this.getCharacterList().get(offset);
     return character ? character.getStyle() : EMPTY_SET;
