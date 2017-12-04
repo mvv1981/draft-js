@@ -8340,7 +8340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  draft_killswitch_allow_nontextnodes: false,
 	  draft_segmented_entities_behavior: false,
 	  draft_handlebeforeinput_composed_text: false,
-	  draft_tree_data_support: true
+	  draft_tree_data_support: false
 	};
 
 	module.exports = DraftFeatureFlags;

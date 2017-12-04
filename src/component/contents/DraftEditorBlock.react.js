@@ -19,6 +19,7 @@ import type {DraftDecoratorType} from 'DraftDecoratorType';
 import type {DraftInlineStyle} from 'DraftInlineStyle';
 import type SelectionState from 'SelectionState';
 import type {BidiDirection} from 'UnicodeBidiDirection';
+import type {BlockMap} from 'BlockMap';
 import type {List} from 'immutable';
 
 const DraftEditorLeaf = require('DraftEditorLeaf.react');
@@ -41,6 +42,7 @@ const SCROLL_BUFFER = 10;
 
 type Props = {
   block: BlockNodeRecord,
+  blockMapTree: Object,
   blockProps?: Object,
   blockStyleFn: (block: BlockNodeRecord) => string,
   contentState: ContentState,
@@ -73,7 +75,10 @@ const isBlockOnSelectionEdge = (
  */
 class DraftEditorBlock extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
+    const key = this.props.block.getKey();
+
     return (
+      this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
       this.props.block !== nextProps.block ||
       this.props.tree !== nextProps.tree ||
       this.props.direction !== nextProps.direction ||
@@ -132,6 +137,13 @@ class DraftEditorBlock extends React.Component<Props> {
         );
       }
     }
+  }
+
+  _renderBlockMap(
+    blocks: BlockMap
+  ): React.Element {
+    const DraftEditorBlocks = this.props.DraftEditorBlocks;
+    return <DraftEditorBlocks {...this.props} blockMap={blocks} />;
   }
 
   _renderChildren(): Array<React.Element<any>> {
@@ -215,7 +227,7 @@ class DraftEditorBlock extends React.Component<Props> {
   }
 
   render(): React.Node {
-    const {direction, offsetKey} = this.props;
+    const {direction, offsetKey, blockMap} = this.props;
     const className = cx({
       'public/DraftStyleDefault/block': true,
       'public/DraftStyleDefault/ltr': direction === 'LTR',
@@ -224,7 +236,10 @@ class DraftEditorBlock extends React.Component<Props> {
 
     return (
       <div data-offset-key={offsetKey} className={className}>
-        {this._renderChildren()}
+        {blockMap && blockMap.size && blockMap.size > 0 ?
+          this._renderBlockMap(blockMap) :
+          this._renderChildren()
+          }
       </div>
     );
   }
