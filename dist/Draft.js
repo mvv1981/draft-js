@@ -3989,16 +3989,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        blockMap = _props.blockMap;
 
 	    var className = cx({
-	      'public/DraftStyleDefault/block': false,
+	      'public/DraftStyleDefault/block': true,
 	      'public/DraftStyleDefault/ltr': direction === 'LTR',
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    return React.createElement(
-	      'div',
-	      { 'data-offset-key': offsetKey, className: className },
-	      blockMap && blockMap.size && blockMap.size > 0 ? this._renderBlockMap(blockMap) : this._renderChildren()
-	    );
+	    return blockMap && blockMap.size && blockMap.size > 0 ? this._renderBlockMap(blockMap) : this._renderChildren();
 	  };
 
 	  return DraftEditorBlock;
