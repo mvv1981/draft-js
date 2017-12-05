@@ -3994,12 +3994,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    console.log('blockMap', blockMap);
+	    if (blockMap && blockMap.size && blockMap.size > 0) {
+	      return this._renderBlockMap(blockMap);
+	    }
 
 	    return React.createElement(
 	      'div',
 	      { 'data-offset-key': offsetKey, className: className },
-	      blockMap && blockMap.size && blockMap.size > 0 ? this._renderBlockMap(blockMap) : this._renderChildren()
+	      this._renderChildren()
 	    );
 	  };
 
