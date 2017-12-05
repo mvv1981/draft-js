@@ -7525,15 +7525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var dataContents = type === 'contents' ? true : null;
 	    var dataBlocks = dataContents ? null : true;
 
-	    return (
-	      // data-contents will be true for the root level block otherwise
-	      // it will just be a block container
-	      React.createElement(
-	        'div',
-	        { 'data-contents': dataContents, 'data-blocks': dataBlocks },
-	        blocks
-	      )
-	    );
+	    return [].concat(blocks);
 	  };
 
 	  return DraftEditorBlocks;
