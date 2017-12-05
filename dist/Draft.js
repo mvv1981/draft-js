@@ -7521,7 +7521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var dataContents = type === 'contents' ? true : null;
 	    var dataBlocks = dataContents ? null : true;
 
-	    return { blocks: blocks };
+	    return [].concat(blocks);
 	  };
 
 	  return DraftEditorBlocks;
