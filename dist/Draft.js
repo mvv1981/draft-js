@@ -3994,7 +3994,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    return blockMap && blockMap.size && blockMap.size > 0 ? this._renderBlockMap(blockMap) : this._renderChildren();
+	    return React.createElement(
+	      'div',
+	      { 'data-offset-key': offsetKey, className: className },
+	      blockMap && blockMap.size && blockMap.size > 0 ? this._renderBlockMap(blockMap) : this._renderChildren()
+	    );
 	  };
 
 	  return DraftEditorBlock;
@@ -7517,7 +7521,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var dataContents = type === 'contents' ? true : null;
 	    var dataBlocks = dataContents ? null : true;
 
-	    return [].concat(blocks);
+	    return (
+	      // data-contents will be true for the root level block otherwise
+	      // it will just be a block container
+	      React.createElement(
+	        'div',
+	        { 'data-contents': dataContents, 'data-blocks': dataBlocks },
+	        blocks
+	      )
+	    );
 	  };
 
 	  return DraftEditorBlocks;
