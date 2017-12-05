@@ -175,7 +175,7 @@ class DraftEditorBlocks extends React.Component {
     });
 
     const dataContents = type === 'contents' ? true : null;
-    const dataBlocks = dataContents ? null : true;§
+    const dataBlocks = dataContents ? null : true;
 
     return blocks;
   }
