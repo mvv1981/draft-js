@@ -3989,7 +3989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        blockMap = _props.blockMap;
 
 	    var className = cx({
-	      'public/DraftStyleDefault/block': true,
+	      'public/DraftStyleDefault/block': false,
 	      'public/DraftStyleDefault/ltr': direction === 'LTR',
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });

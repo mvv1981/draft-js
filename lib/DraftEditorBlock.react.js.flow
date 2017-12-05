@@ -175,7 +175,7 @@ class DraftEditorBlock extends React.Component<Props> {
   render(): React.Node {
     const { direction, offsetKey, blockMap } = this.props;
     const className = cx({
-      'public/DraftStyleDefault/block': true,
+      'public/DraftStyleDefault/block': false,
       'public/DraftStyleDefault/ltr': direction === 'LTR',
       'public/DraftStyleDefault/rtl': direction === 'RTL'
     });
