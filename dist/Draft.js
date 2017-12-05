@@ -2536,6 +2536,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return DraftEntity.__get(key);
 	  };
 
+	  ContentState.prototype.getFirstLevelBlocks = function getFirstLevelBlocks() {
+	    return this.getBlockChildren('');
+	  };
+
+	  ContentState.prototype.getBlockDescendants = function getBlockDescendants() {
+	    return this.getBlockMap().reverse().reduce(function (treeMap, block) {
+	      var key = block.getKey();
+	      var parentKey = block.getParentKey();
+	      var rootKey = '__ROOT__';
+
+	      // create one if does not exist
+	      var blockList = treeMap.get(key) ? treeMap : treeMap.set(key, new Immutable.Map({
+	        firstLevelBlocks: new Immutable.OrderedMap(),
+	        childrenBlocks: new Immutable.Set()
+	      }));
+
+	      if (parentKey) {
+	        // create one if does not exist
+	        var parentList = blockList.get(parentKey) ? blockList : blockList.set(parentKey, new Immutable.Map({
+	          firstLevelBlocks: new Immutable.OrderedMap(),
+	          childrenBlocks: new Immutable.Set()
+	        }));
+
+	        // add current block to parent children list
+	        var addBlockToParentList = parentList.setIn([parentKey, 'firstLevelBlocks', key], block);
+	        var addGrandChildren = addBlockToParentList.setIn([parentKey, 'childrenBlocks'], addBlockToParentList.getIn([parentKey, 'childrenBlocks']).add(
+	        // we include all the current block children and itself
+	        addBlockToParentList.getIn([key, 'childrenBlocks']).add(block)));
+
+	        return addGrandChildren;
+	      } else {
+	        // we are root level block
+	        // lets create a new key called firstLevelBlocks
+	        var rootLevelBlocks = blockList.get(rootKey) ? blockList : blockList.set(rootKey, new Immutable.Map({
+	          firstLevelBlocks: new Immutable.OrderedMap(),
+	          childrenBlocks: new Immutable.Set()
+	        }));
+
+	        var rootFirstLevelBlocks = rootLevelBlocks.setIn([rootKey, 'firstLevelBlocks', key], block);
+
+	        var addToRootChildren = rootFirstLevelBlocks.setIn([rootKey, 'childrenBlocks'], rootFirstLevelBlocks.getIn([rootKey, 'childrenBlocks']).add(
+	        // we include all the current block children and itself
+	        rootFirstLevelBlocks.getIn([key, 'childrenBlocks']).add(block)));
+
+	        return addToRootChildren;
+	      }
+	    }, new Immutable.Map()).map(function (block) {
+	      return block.set('firstLevelBlocks', block.get('firstLevelBlocks').reverse());
+	    });
+	  };
+
+	  ContentState.prototype.getBlockChildren = function getBlockChildren(key) {
+	    return this.getBlockMap().filter(function (block) {
+	      return block.getParentKey() === key;
+	    });
+	  };
+
 	  ContentState.createFromBlockArray = function createFromBlockArray(
 	  // TODO: update flow type when we completely deprecate the old entity API
 	  blocks, entityMap) {
