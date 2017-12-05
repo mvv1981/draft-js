@@ -234,6 +234,8 @@ class DraftEditorBlock extends React.Component<Props> {
       'public/DraftStyleDefault/rtl': direction === 'RTL',
     });
 
+    console.log('blockMap', blockMap);
+
     return (
       <div data-offset-key={offsetKey} className={className}>
         {blockMap && blockMap.size && blockMap.size > 0 ?

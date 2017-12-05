@@ -3994,6 +3994,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
+	    console.log('blockMap', blockMap);
+
 	    return React.createElement(
 	      'div',
 	      { 'data-offset-key': offsetKey, className: className },
