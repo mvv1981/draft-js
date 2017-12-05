@@ -178,9 +178,7 @@ class DraftEditorBlocks extends React.Component {
     const dataBlocks = dataContents ? null : true;
 
     return (
-      // data-contents will be true for the root level block otherwise
-      // it will just be a block container
-      <div data-contents={dataContents} data-blocks={dataBlocks} >{blocks}</div>
+      {blocks}
     );
   }
 }
