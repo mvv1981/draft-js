@@ -21,7 +21,9 @@ const ContentBlock = require('./ContentBlock');
 import type ContentState from './ContentState';
 import type SelectionState from './SelectionState';
 
-const { List } = Immutable;
+const {
+  List
+} = Immutable;
 
 /*
   Split a block and create a new nested block,

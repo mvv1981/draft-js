@@ -13,6 +13,6 @@
 
 'use strict';
 
-const DraftEditorContents = require('DraftEditorContents-core.react');
+const DraftEditorContents = require('DraftEditorContents.react');
 
 module.exports = DraftEditorContents;

@@ -8877,7 +8877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var EMPTY_CHAR_LIST = List(Repeat(CharacterMetadata.create(), EMPTY_CHAR.length));
 
 	var DefaultBlockRenderMap = new Immutable.Map(new Immutable.fromJS(DefaultDraftBlockRenderMap.toJS()).mergeDeep(new Immutable.fromJS({
-	  blockquote: {
+	  'blockquote': {
 	    nestingEnabled: true
 	  },
 	  'unordered-list-item': {
