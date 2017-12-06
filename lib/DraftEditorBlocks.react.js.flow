@@ -78,7 +78,6 @@ class DraftEditorBlocks extends React.Component {
       const componentProps = {
         block,
         blockProps: customProps,
-        contentState: content,
         customStyleMap,
         decorator,
         direction,

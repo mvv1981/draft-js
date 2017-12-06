@@ -3998,14 +3998,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    // if (blockMap && blockMap.size && blockMap.size > 0) {
-	    //   return this._renderBlockMap(blockMap);
-	    // }
+	    if (blockMap && blockMap.size && blockMap.size > 0) {
+	      return this._renderBlockMap(blockMap);
+	    }
 
 	    return React.createElement(
 	      'div',
 	      { 'data-offset-key': offsetKey, className: className },
-	      /*{this._renderChildren()}*/this._renderBlockMap(blockMap)
+	      this._renderChildren()
 	    );
 	  };
 
@@ -7449,7 +7449,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var componentProps = {
 	        block: block,
 	        blockProps: customProps,
-	        contentState: content,
 	        customStyleMap: customStyleMap,
 	        decorator: decorator,
 	        direction: direction,
@@ -7856,7 +7855,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      blockRendererFn: blockRendererFn,
 	      blockRenderMap: blockRenderMap,
 	      customStyleMap: customStyleMap,
-	      content: content,
 	      getBlockTree: editorState.getBlockTree.bind(editorState),
 	      getBlockChildren: content.getBlockChildren.bind(content),
 	      getBlockDescendants: content.getBlockDescendants.bind(content)
