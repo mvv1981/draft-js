@@ -3860,6 +3860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  DraftEditorBlock.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
 	    var key = this.props.block.getKey();
 
+	    console.log(this.props.blockMapTree);
 	    return this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) || this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection;
 	  };
 

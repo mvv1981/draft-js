@@ -77,6 +77,7 @@ class DraftEditorBlock extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     const key = this.props.block.getKey();
 
+    console.log(this.props.blockMapTree);
     return (
       this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
       this.props.block !== nextProps.block ||
