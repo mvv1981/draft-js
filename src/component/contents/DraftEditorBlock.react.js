@@ -19,7 +19,7 @@ import type {DraftDecoratorType} from 'DraftDecoratorType';
 import type {DraftInlineStyle} from 'DraftInlineStyle';
 import type SelectionState from 'SelectionState';
 import type {BidiDirection} from 'UnicodeBidiDirection';
-import type {BlockMap} from 'BlockMap';
+// import type {BlockMap} from 'BlockMap';
 import type {List} from 'immutable';
 
 const DraftEditorLeaf = require('DraftEditorLeaf.react');
@@ -42,7 +42,7 @@ const SCROLL_BUFFER = 10;
 
 type Props = {
   block: BlockNodeRecord,
-  blockMapTree: Object,
+  // blockMapTree: Object,
   blockProps?: Object,
   blockStyleFn: (block: BlockNodeRecord) => string,
   contentState: ContentState,
@@ -75,10 +75,10 @@ const isBlockOnSelectionEdge = (
  */
 class DraftEditorBlock extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
-    const key = this.props.block.getKey();
-    
+    // const key = this.props.block.getKey();
+
     return (
-      this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
+      // this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
       this.props.block !== nextProps.block ||
       this.props.tree !== nextProps.tree ||
       this.props.direction !== nextProps.direction ||
@@ -139,12 +139,12 @@ class DraftEditorBlock extends React.Component<Props> {
     }
   }
 
-  _renderBlockMap(
-    blocks: BlockMap
-  ): React.Element {
-    const DraftEditorBlocks = this.props.DraftEditorBlocks;
-    return <DraftEditorBlocks {...this.props} blockMap={blocks} />;
-  }
+  // _renderBlockMap(
+  //   blocks: BlockMap
+  // ): React.Element {
+  //   const DraftEditorBlocks = this.props.DraftEditorBlocks;
+  //   return <DraftEditorBlocks {...this.props} blockMap={blocks} />;
+  // }
 
   _renderChildren(): Array<React.Element<any>> {
     const block = this.props.block;
@@ -227,16 +227,17 @@ class DraftEditorBlock extends React.Component<Props> {
   }
 
   render(): React.Node {
-    const {direction, offsetKey, blockMap} = this.props;
+    // const {direction, offsetKey, blockMap} = this.props;
+    const {direction, offsetKey} = this.props;
     const className = cx({
       'public/DraftStyleDefault/block': true,
       'public/DraftStyleDefault/ltr': direction === 'LTR',
       'public/DraftStyleDefault/rtl': direction === 'RTL',
     });
 
-    if (blockMap && blockMap.size && blockMap.size > 0) {
-      return this._renderBlockMap(blockMap);
-    }
+    // if (blockMap && blockMap.size && blockMap.size > 0) {
+    //   return this._renderBlockMap(blockMap);
+    // }
 
     return (
       <div data-offset-key={offsetKey} className={className}>
