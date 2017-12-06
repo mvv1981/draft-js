@@ -3817,6 +3817,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var DraftEditorLeaf = __webpack_require__(71);
+	// import type {BlockMap} from 'BlockMap';
+
 	var DraftOffsetKey = __webpack_require__(25);
 	var React = __webpack_require__(14);
 	var ReactDOM = __webpack_require__(21);
@@ -3858,9 +3860,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  DraftEditorBlock.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-	    var key = this.props.block.getKey();
+	    // const key = this.props.block.getKey();
 
-	    return this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) || this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection;
+	    return (
+	      // this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
+	      this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection
+	    );
 	  };
 
 	  /**
@@ -3908,10 +3913,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 
-	  DraftEditorBlock.prototype._renderBlockMap = function _renderBlockMap(blocks) {
-	    var DraftEditorBlocks = this.props.DraftEditorBlocks;
-	    return React.createElement(DraftEditorBlocks, _extends({}, this.props, { blockMap: blocks }));
-	  };
+	  // _renderBlockMap(
+	  //   blocks: BlockMap
+	  // ): React.Element {
+	  //   const DraftEditorBlocks = this.props.DraftEditorBlocks;
+	  //   return <DraftEditorBlocks {...this.props} blockMap={blocks} />;
+	  // }
 
 	  DraftEditorBlock.prototype._renderChildren = function _renderChildren() {
 	    var _this2 = this;
@@ -3983,10 +3990,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  DraftEditorBlock.prototype.render = function render() {
+	    // const {direction, offsetKey, blockMap} = this.props;
 	    var _props = this.props,
 	        direction = _props.direction,
-	        offsetKey = _props.offsetKey,
-	        blockMap = _props.blockMap;
+	        offsetKey = _props.offsetKey;
 
 	    var className = cx({
 	      'public/DraftStyleDefault/block': true,
@@ -3994,9 +4001,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    if (blockMap && blockMap.size && blockMap.size > 0) {
-	      return this._renderBlockMap(blockMap);
-	    }
+	    // if (blockMap && blockMap.size && blockMap.size > 0) {
+	    //   return this._renderBlockMap(blockMap);
+	    // }
 
 	    return React.createElement(
 	      'div',
@@ -7529,8 +7536,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule DraftEditorContents-core.react
-	 * @format
+	 * @providesModule DraftEditorContents.react
+	 * @typechecks
 	 * 
 	 */
 
