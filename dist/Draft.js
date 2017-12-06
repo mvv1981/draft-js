@@ -3998,9 +3998,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    if (blockMap && blockMap.size && blockMap.size > 0) {
-	      return this._renderBlockMap(blockMap);
-	    }
+	    // if (blockMap && blockMap.size && blockMap.size > 0) {
+	    //   return this._renderBlockMap(blockMap);
+	    // }
 
 	    return React.createElement(
 	      'div',
