@@ -24,16 +24,13 @@ import type { DraftBlockType } from './DraftBlockType';
 import type { DraftEditorCommand } from './DraftEditorCommand';
 import type { DraftBlockRenderMap } from './DraftBlockRenderMap';
 
-const {
-  List,
-  Repeat
-} = Immutable;
+const { List, Repeat } = Immutable;
 
 const EMPTY_CHAR = '';
 const EMPTY_CHAR_LIST = List(Repeat(CharacterMetadata.create(), EMPTY_CHAR.length));
 
 const DefaultBlockRenderMap = new Immutable.Map(new Immutable.fromJS(DefaultDraftBlockRenderMap.toJS()).mergeDeep(new Immutable.fromJS({
-  'blockquote': {
+  blockquote: {
     nestingEnabled: true
   },
   'unordered-list-item': {
