@@ -4005,7 +4005,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return React.createElement(
 	      'div',
 	      { 'data-offset-key': offsetKey, className: className },
-	      this._renderChildren()
+	      /*{this._renderChildren()}*/this._renderBlockMap(blockMap)
 	    );
 	  };
 
