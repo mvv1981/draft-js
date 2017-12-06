@@ -3817,8 +3817,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var DraftEditorLeaf = __webpack_require__(72);
-	// import type {BlockMap} from 'BlockMap';
-
 	var DraftOffsetKey = __webpack_require__(25);
 	var React = __webpack_require__(11);
 	var ReactDOM = __webpack_require__(21);
@@ -3913,12 +3911,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 
-	  // _renderBlockMap(
-	  //   blocks: BlockMap
-	  // ): React.Element {
-	  //   const DraftEditorBlocks = this.props.DraftEditorBlocks;
-	  //   return <DraftEditorBlocks {...this.props} blockMap={blocks} />;
-	  // }
+	  DraftEditorBlock.prototype._renderBlockMap = function _renderBlockMap(blocks) {
+	    var DraftEditorBlocks = this.props.DraftEditorBlocks;
+	    return React.createElement(DraftEditorBlocks, _extends({}, this.props, { blockMap: blocks }));
+	  };
 
 	  DraftEditorBlock.prototype._renderChildren = function _renderChildren() {
 	    var _this2 = this;
@@ -3990,10 +3986,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  DraftEditorBlock.prototype.render = function render() {
-	    // const {direction, offsetKey, blockMap} = this.props;
 	    var _props = this.props,
 	        direction = _props.direction,
-	        offsetKey = _props.offsetKey;
+	        offsetKey = _props.offsetKey,
+	        blockMap = _props.blockMap;
+	    // const {direction, offsetKey} = this.props;
 
 	    var className = cx({
 	      'public/DraftStyleDefault/block': true,
@@ -4001,9 +3998,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'public/DraftStyleDefault/rtl': direction === 'RTL'
 	    });
 
-	    // if (blockMap && blockMap.size && blockMap.size > 0) {
-	    //   return this._renderBlockMap(blockMap);
-	    // }
+	    if (blockMap && blockMap.size && blockMap.size > 0) {
+	      return this._renderBlockMap(blockMap);
+	    }
 
 	    return React.createElement(
 	      'div',
