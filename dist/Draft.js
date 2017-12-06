@@ -3858,12 +3858,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  DraftEditorBlock.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-	    // const key = this.props.block.getKey();
+	    var key = this.props.block.getKey();
 
-	    return (
-	      // this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
-	      this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection
-	    );
+	    return this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) || this.props.block !== nextProps.block || this.props.tree !== nextProps.tree || this.props.direction !== nextProps.direction || isBlockOnSelectionEdge(nextProps.selection, nextProps.block.getKey()) && nextProps.forceSelection;
 	  };
 
 	  /**
@@ -7449,6 +7446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var componentProps = {
 	        block: block,
 	        blockProps: customProps,
+	        contentState: content,
 	        customStyleMap: customStyleMap,
 	        decorator: decorator,
 	        direction: direction,
@@ -7855,6 +7853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      blockRendererFn: blockRendererFn,
 	      blockRenderMap: blockRenderMap,
 	      customStyleMap: customStyleMap,
+	      content: content,
 	      getBlockTree: editorState.getBlockTree.bind(editorState),
 	      getBlockChildren: content.getBlockChildren.bind(content),
 	      getBlockDescendants: content.getBlockDescendants.bind(content)
