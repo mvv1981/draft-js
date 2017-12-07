@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule splitBlockWithNestingInContentState
- * @typechecks
+ * @format
  * @flow
  */
 
@@ -21,9 +21,7 @@ const ContentBlock = require('ContentBlock');
 import type ContentState from 'ContentState';
 import type SelectionState from 'SelectionState';
 
-const {
-  List
-} = Immutable;
+const {List} = Immutable;
 
 /*
   Split a block and create a new nested block,
@@ -38,12 +36,9 @@ const {
 function splitBlockWithNestingInContentState(
   contentState: ContentState,
   selectionState: SelectionState,
-  blockType:string='unstyled'
+  blockType: string = 'unstyled',
 ): ContentState {
-  invariant(
-    selectionState.isCollapsed(),
-    'Selection range must be collapsed.'
-  );
+  invariant(selectionState.isCollapsed(), 'Selection range must be collapsed.');
 
   const key = selectionState.getAnchorKey();
   const offset = selectionState.getAnchorOffset();
@@ -58,31 +53,38 @@ function splitBlockWithNestingInContentState(
 
   const newParentBlock = blockToSplit.merge({
     text: '',
-    characterList: List()
+    characterList: List(),
   });
 
   const firstNestedBlock = new ContentBlock({
     key: firstNestedKey,
     type: blockType,
     text: text.slice(0, offset),
-    characterList: chars.slice(0, offset)
+    characterList: chars.slice(0, offset),
   });
 
   const secondNestedBlock = new ContentBlock({
     key: secondNestedKey,
     type: blockType,
     text: text.slice(offset),
-    characterList: chars.slice(offset)
+    characterList: chars.slice(offset),
   });
 
   const blocksBefore = blockMap.toSeq().takeUntil(v => v === blockToSplit);
-  const blocksAfter = blockMap.toSeq().skipUntil(v => v === blockToSplit).rest();
-  const newBlocks = blocksBefore.concat(
-    [[newParentBlock.getKey(), newParentBlock],
-      [firstNestedBlock.getKey(), firstNestedBlock],
-      [secondNestedBlock.getKey(), secondNestedBlock]],
-    blocksAfter
-  ).toOrderedMap();
+  const blocksAfter = blockMap
+    .toSeq()
+    .skipUntil(v => v === blockToSplit)
+    .rest();
+  const newBlocks = blocksBefore
+    .concat(
+      [
+        [newParentBlock.getKey(), newParentBlock],
+        [firstNestedBlock.getKey(), firstNestedBlock],
+        [secondNestedBlock.getKey(), secondNestedBlock],
+      ],
+      blocksAfter,
+    )
+    .toOrderedMap();
 
   return contentState.merge({
     blockMap: newBlocks,

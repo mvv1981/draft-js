@@ -55,6 +55,7 @@ type Props = {
   selection: SelectionState,
   startIndent?: boolean,
   tree: List<any>,
+  blockMap: List<any>,
 };
 
 /**
@@ -78,7 +79,8 @@ class DraftEditorBlock extends React.Component<Props> {
     const key = this.props.block.getKey();
 
     return (
-      this.props.blockMapTree.getIn([key, 'childrenBlocks']) !== nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
+      this.props.blockMapTree.getIn([key, 'childrenBlocks']) !==
+        nextProps.blockMapTree.getIn([key, 'childrenBlocks']) ||
       this.props.block !== nextProps.block ||
       this.props.tree !== nextProps.tree ||
       this.props.direction !== nextProps.direction ||
@@ -139,9 +141,7 @@ class DraftEditorBlock extends React.Component<Props> {
     }
   }
 
-  _renderBlockMap(
-    blocks: BlockMap
-  ): React.Element {
+  _renderBlockMap(blocks: BlockMap): React.Element {
     const DraftEditorBlocks = this.props.DraftEditorBlocks;
     return <DraftEditorBlocks {...this.props} blockMap={blocks} />;
   }

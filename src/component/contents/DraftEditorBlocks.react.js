@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule DraftEditorBlocks.react
- * @typechecks
+ * @format
  * @flow
  */
 
@@ -107,10 +107,9 @@ class DraftEditorBlocks extends React.Component {
 
       const useNewWrapper = wrapperTemplate !== currentWrapperTemplate;
 
-      const Element = (
+      const Element =
         blockRenderMap.get(blockType).element ||
-        blockRenderMap.get('unstyled').element
-      );
+        blockRenderMap.get('unstyled').element;
 
       const depth = block.getDepth();
       let className = blockStyleFn(block);
@@ -118,14 +117,11 @@ class DraftEditorBlocks extends React.Component {
       // List items are special snowflakes, since we handle nesting and
       // counters manually.
       if (Element === 'li') {
-        const shouldResetCount = (
-          useNewWrapper ||
-          currentDepth === null ||
-          depth > currentDepth
-        );
+        const shouldResetCount =
+          useNewWrapper || currentDepth === null || depth > currentDepth;
         className = joinClasses(
           className,
-          getListItemClasses(blockType, depth, shouldResetCount, direction)
+          getListItemClasses(blockType, depth, shouldResetCount, direction),
         );
       }
 
@@ -160,7 +156,7 @@ class DraftEditorBlocks extends React.Component {
               key: key + '-wrap',
               'data-offset-key': offsetKey,
             },
-            currentWrappedBlocks
+            currentWrappedBlocks,
           );
           currentWrapperTemplate = wrapperTemplate;
           blocks.push(currentWrapperElement);
@@ -197,9 +193,8 @@ function getListItemClasses(
 ): string {
   return cx({
     'public/DraftStyleDefault/unorderedListItem':
-    type === 'unordered-list-item',
-    'public/DraftStyleDefault/orderedListItem':
-    type === 'ordered-list-item',
+      type === 'unordered-list-item',
+    'public/DraftStyleDefault/orderedListItem': type === 'ordered-list-item',
     'public/DraftStyleDefault/reset': shouldResetCount,
     'public/DraftStyleDefault/depth0': depth === 0,
     'public/DraftStyleDefault/depth1': depth === 1,

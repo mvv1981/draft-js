@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule NestedTextEditorUtil
- * @typechecks
+ * @format
  * @flow
  */
 const CharacterMetadata = require('CharacterMetadata');
@@ -20,40 +20,33 @@ const generateNestedKey = require('generateNestedKey');
 const generateRandomKey = require('generateRandomKey');
 const splitBlockWithNestingInContentState = require('splitBlockWithNestingInContentState');
 
-import type {
-  DraftBlockType
-} from 'DraftBlockType';
-import type {
-  DraftEditorCommand
-} from 'DraftEditorCommand';
-import type {
-  DraftBlockRenderMap
-} from 'DraftBlockRenderMap';
+import type {DraftBlockType} from 'DraftBlockType';
+import type {DraftEditorCommand} from 'DraftEditorCommand';
+import type {DraftBlockRenderMap} from 'DraftBlockRenderMap';
 
-const {
-  List,
-  Repeat,
-} = Immutable;
+const {List, Repeat} = Immutable;
 
 const EMPTY_CHAR = '';
-const EMPTY_CHAR_LIST = List(Repeat(CharacterMetadata.create(), EMPTY_CHAR.length));
+const EMPTY_CHAR_LIST = List(
+  Repeat(CharacterMetadata.create(), EMPTY_CHAR.length),
+);
 
 const DefaultBlockRenderMap = new Immutable.Map(
-  new Immutable.fromJS(
-    DefaultDraftBlockRenderMap.toJS()
-  ).mergeDeep(
-    new Immutable.fromJS({
-      'blockquote': {
-        nestingEnabled: true
-      },
-      'unordered-list-item': {
-        nestingEnabled: true
-      },
-      'ordered-list-item': {
-        nestingEnabled: true
-      }
-    })
-  ).toJS()
+  new Immutable.fromJS(DefaultDraftBlockRenderMap.toJS())
+    .mergeDeep(
+      new Immutable.fromJS({
+        blockquote: {
+          nestingEnabled: true,
+        },
+        'unordered-list-item': {
+          nestingEnabled: true,
+        },
+        'ordered-list-item': {
+          nestingEnabled: true,
+        },
+      }),
+    )
+    .toJS(),
 );
 
 const NestedTextEditorUtil = {
@@ -62,41 +55,38 @@ const NestedTextEditorUtil = {
   toggleBlockType: function(
     editorState: EditorState,
     blockType: DraftBlockType,
-    blockRenderMap: DefaultDraftBlockRenderMap = NestedTextEditorUtil.DefaultBlockRenderMap
+    blockRenderMap: DefaultDraftBlockRenderMap = NestedTextEditorUtil.DefaultBlockRenderMap,
   ): Object {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
-    const currentBlock = contentState.getBlockForKey(selectionState.getStartKey());
+    const currentBlock = contentState.getBlockForKey(
+      selectionState.getStartKey(),
+    );
     const key = currentBlock.getKey();
     const renderOpt = blockRenderMap.get(currentBlock.getType());
     const hasNestingEnabled = renderOpt && renderOpt.nestingEnabled;
     const targetTypeRenderOpt = blockRenderMap.get(blockType);
     const parentKey = currentBlock.getParentKey();
     const parentBlock = contentState.getBlockForKey(parentKey);
-    const parentRenderOpt = parentBlock && blockRenderMap.get(parentBlock.getType());
-    const isCousinType = (
+    const parentRenderOpt =
+      parentBlock && blockRenderMap.get(parentBlock.getType());
+    const isCousinType =
       renderOpt &&
       targetTypeRenderOpt &&
-      renderOpt.element === targetTypeRenderOpt.element
-    );
-    const isParentCousinType = (
+      renderOpt.element === targetTypeRenderOpt.element;
+    const isParentCousinType =
       parentRenderOpt &&
       targetTypeRenderOpt &&
-      parentRenderOpt.element === targetTypeRenderOpt.element
-    );
+      parentRenderOpt.element === targetTypeRenderOpt.element;
 
-    const canHandleCommand = (
-      (
-        hasNestingEnabled ||
-        targetTypeRenderOpt.nestingEnabled
-      ) &&
-      blockType !== currentBlock.getType()
-    );
+    const canHandleCommand =
+      (hasNestingEnabled || targetTypeRenderOpt.nestingEnabled) &&
+      blockType !== currentBlock.getType();
 
     if (!canHandleCommand) {
       return {
         editorState,
-        blockType
+        blockType,
       };
     }
 
@@ -112,7 +102,7 @@ const NestedTextEditorUtil = {
                 type: blockType,
                 depth: block.getDepth(),
                 text: block.getText(),
-                characterList: block.getCharacterList()
+                characterList: block.getCharacterList(),
               });
             }
             if (block === currentBlock) {
@@ -125,12 +115,12 @@ const NestedTextEditorUtil = {
                 type: 'unstyled',
                 depth: block.getDepth(),
                 text: block.getText(),
-                characterList: block.getCharacterList()
+                characterList: block.getCharacterList(),
               });
             }
             return block;
           })
-          .toArray()
+          .toArray(),
       );
 
       return {
@@ -144,11 +134,11 @@ const NestedTextEditorUtil = {
               focusKey: key,
               focusOffset: selectionState.getFocusOffset(),
               isBackward: false,
-            })
+            }),
           }),
-          'change-block-type'
+          'change-block-type',
         ),
-        blockType: currentBlock.getType() // we then send the original type to be restored
+        blockType: currentBlock.getType(), // we then send the original type to be restored
       };
     }
 
@@ -165,7 +155,7 @@ const NestedTextEditorUtil = {
                 type: 'unstyled',
                 depth: currentBlock.getDepth(),
                 text: currentBlock.getText(),
-                characterList: currentBlock.getCharacterList()
+                characterList: currentBlock.getCharacterList(),
               });
             } else {
               return [
@@ -174,21 +164,21 @@ const NestedTextEditorUtil = {
                   type: currentBlock.getType(),
                   depth: currentBlock.getDepth(),
                   text: EMPTY_CHAR,
-                  characterList: EMPTY_CHAR_LIST
+                  characterList: EMPTY_CHAR_LIST,
                 }),
                 new ContentBlock({
                   key: targetKey,
                   type: 'unstyled',
                   depth: 0,
                   text: currentBlock.getText(),
-                  characterList: currentBlock.getCharacterList()
-                })
+                  characterList: currentBlock.getCharacterList(),
+                }),
               ];
             }
           }
           return block;
         })
-        .reduce((a, b) => a.concat(b), [])
+        .reduce((a, b) => a.concat(b), []),
     );
 
     return {
@@ -202,19 +192,19 @@ const NestedTextEditorUtil = {
             focusKey: isCousinType ? key : targetKey,
             focusOffset: selectionState.getFocusOffset(),
             isBackward: false,
-          })
+          }),
         }),
-        'change-block-type'
+        'change-block-type',
       ),
-      blockType
+      blockType,
     };
   },
 
   handleKeyCommand: function(
     editorState: EditorState,
     command: DraftEditorCommand,
-    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap
-  ): ? EditorState {
+    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap,
+  ): ?EditorState {
     const selectionState = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     const key = selectionState.getAnchorKey();
@@ -228,7 +218,8 @@ const NestedTextEditorUtil = {
 
     // Option of rendering for the current block
     const renderOpt = blockRenderMap.get(currentBlock.getType());
-    const parentRenderOpt = parentBlock && blockRenderMap.get(parentBlock.getType());
+    const parentRenderOpt =
+      parentBlock && blockRenderMap.get(parentBlock.getType());
 
     const hasNestingEnabled = renderOpt && renderOpt.nestingEnabled;
     const hasWrapper = renderOpt && renderOpt.wrapper;
@@ -239,19 +230,11 @@ const NestedTextEditorUtil = {
     if (command === 'split-block') {
       if (
         currentBlock.hasParent() &&
-        (!hasNestingEnabled ||
-          currentBlock.getLength() === 0
-        ) &&
+        (!hasNestingEnabled || currentBlock.getLength() === 0) &&
         (!nextBlock ||
-          (
-            hasWrapper &&
-            nextBlock.getType() !== currentBlock.getType()
-          ) ||
-          (
-            nextBlock.getParentKey() !== currentBlock.getParentKey() &&
-            (currentBlock.getLength() === 0 || parentHasWrapper)
-          )
-        )
+          (hasWrapper && nextBlock.getType() !== currentBlock.getType()) ||
+          (nextBlock.getParentKey() !== currentBlock.getParentKey() &&
+            (currentBlock.getLength() === 0 || parentHasWrapper)))
       ) {
         command = 'split-parent-block';
       }
@@ -273,7 +256,10 @@ const NestedTextEditorUtil = {
       case 'delete':
         return NestedTextEditorUtil.onDelete(editorState, blockRenderMap);
       case 'split-nested-block':
-        return NestedTextEditorUtil.onSplitNestedBlock(editorState, blockRenderMap);
+        return NestedTextEditorUtil.onSplitNestedBlock(
+          editorState,
+          blockRenderMap,
+        );
       case 'split-parent-block':
         return NestedTextEditorUtil.onSplitParent(editorState, blockRenderMap);
       default:
@@ -289,8 +275,8 @@ const NestedTextEditorUtil = {
 
   onBackspace: function(
     editorState: EditorState,
-    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap
-  ): ? EditorState {
+    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap,
+  ): ?EditorState {
     const selectionState = editorState.getSelection();
     const isCollapsed = selectionState.isCollapsed();
     const contentState = editorState.getCurrentContent();
@@ -299,12 +285,11 @@ const NestedTextEditorUtil = {
     const currentBlock = contentState.getBlockForKey(key);
     const previousBlock = contentState.getBlockBefore(key);
 
-    const canHandleCommand = (
+    const canHandleCommand =
       isCollapsed &&
       selectionState.getEndOffset() === 0 &&
       previousBlock &&
-      previousBlock.getKey() === currentBlock.getParentKey()
-    );
+      previousBlock.getKey() === currentBlock.getParentKey();
 
     if (!canHandleCommand) {
       return null;
@@ -312,7 +297,7 @@ const NestedTextEditorUtil = {
 
     const targetBlock = getFirstAvailableLeafBeforeBlock(
       currentBlock,
-      contentState
+      contentState,
     );
 
     if (targetBlock === currentBlock) {
@@ -334,9 +319,9 @@ const NestedTextEditorUtil = {
                 type: currentBlock.getType(),
                 depth: currentBlock.getDepth(),
                 text: currentBlock.getText(),
-                characterList: currentBlock.getCharacterList()
+                characterList: currentBlock.getCharacterList(),
               }),
-              block
+              block,
             ];
           } else if (targetBlock && block === targetBlock) {
             return new ContentBlock({
@@ -344,16 +329,20 @@ const NestedTextEditorUtil = {
               type: targetBlock.getType(),
               depth: targetBlock.getDepth(),
               text: targetBlock.getText() + currentBlock.getText(),
-              characterList: targetBlock.getCharacterList().concat(currentBlock.getCharacterList())
+              characterList: targetBlock
+                .getCharacterList()
+                .concat(currentBlock.getCharacterList()),
             });
           }
           return block;
         })
         .filter(block => block !== currentBlock)
-        .reduce((a, b) => a.concat(b), [])
+        .reduce((a, b) => a.concat(b), []),
     );
 
-    const selectionOffset = newContentState.getBlockForKey(targetKey).getLength();
+    const selectionOffset = newContentState
+      .getBlockForKey(targetKey)
+      .getLength();
 
     return EditorState.push(
       editorState,
@@ -365,16 +354,16 @@ const NestedTextEditorUtil = {
           focusKey: targetKey,
           focusOffset: selectionOffset,
           isBackward: false,
-        })
+        }),
       }),
-      'backspace-character'
+      'backspace-character',
     );
   },
 
   onDelete: function(
     editorState: EditorState,
-    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap
-  ): ? EditorState {
+    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap,
+  ): ?EditorState {
     const selectionState = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     const key = selectionState.getAnchorKey();
@@ -384,14 +373,11 @@ const NestedTextEditorUtil = {
     const nextBlock = contentState.getBlockAfter(key);
     const isCollapsed = selectionState.isCollapsed();
 
-    const canHandleCommand = (
+    const canHandleCommand =
       nextBlock &&
       isCollapsed &&
       selectionState.getEndOffset() === currentBlock.getLength() &&
-      contentState.getBlockChildren(
-        nextBlock.getKey()
-      ).size
-    );
+      contentState.getBlockChildren(nextBlock.getKey()).size;
 
     if (!canHandleCommand) {
       return null;
@@ -404,7 +390,10 @@ const NestedTextEditorUtil = {
     const blockMap = contentState.getBlockMap();
 
     // the previous block is invalid so we need a new target
-    const targetBlock = getFirstAvailableLeafAfterBlock(currentBlock, contentState);
+    const targetBlock = getFirstAvailableLeafAfterBlock(
+      currentBlock,
+      contentState,
+    );
 
     const newContentState = ContentState.createFromBlockArray(
       blockMap
@@ -416,13 +405,15 @@ const NestedTextEditorUtil = {
               type: currentBlock.getType(),
               depth: currentBlock.getDepth(),
               text: currentBlock.getText() + targetBlock.getText(),
-              characterList: currentBlock.getCharacterList().concat(targetBlock.getCharacterList())
+              characterList: currentBlock
+                .getCharacterList()
+                .concat(targetBlock.getCharacterList()),
             });
           }
           return block;
         })
         .filter(block => block !== targetBlock)
-        .reduce((a, b) => a.concat(b), [])
+        .reduce((a, b) => a.concat(b), []),
     );
 
     const selectionOffset = currentBlock.getLength();
@@ -437,31 +428,30 @@ const NestedTextEditorUtil = {
           focusKey: key,
           focusOffset: selectionOffset,
           isBackward: false,
-        })
+        }),
       }),
-      'delete-character'
+      'delete-character',
     );
-
   },
 
   onSplitNestedBlock: function(
     editorState: EditorState,
-    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap
-  ): ? EditorState {
+    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap,
+  ): ?EditorState {
     const selectionState = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
 
     return EditorState.push(
       editorState,
       splitBlockWithNestingInContentState(contentState, selectionState),
-      'split-block'
+      'split-block',
     );
   },
 
   onSplitParent: function(
     editorState: EditorState,
-    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap
-  ): ? EditorState {
+    blockRenderMap: DraftBlockRenderMap = DefaultBlockRenderMap,
+  ): ?EditorState {
     const selectionState = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     const key = selectionState.getAnchorKey();
@@ -473,7 +463,8 @@ const NestedTextEditorUtil = {
 
     // Option of rendering for the current block
     const renderOpt = blockRenderMap.get(currentBlock.getType());
-    const parentRenderOpt = parentBlock && blockRenderMap.get(parentBlock.getType());
+    const parentRenderOpt =
+      parentBlock && blockRenderMap.get(parentBlock.getType());
 
     const hasWrapper = renderOpt && renderOpt.wrapper;
 
@@ -481,29 +472,29 @@ const NestedTextEditorUtil = {
 
     const blockMap = contentState.getBlockMap();
 
-    const targetKey = (
-      hasWrapper ?
-        generateNestedKey(parentKey) :
-        parentBlock && parentBlock.getParentKey() ?
-          generateNestedKey(parentBlock.getParentKey()) :
-          generateRandomKey()
-    );
+    const targetKey = hasWrapper
+      ? generateNestedKey(parentKey)
+      : parentBlock && parentBlock.getParentKey()
+        ? generateNestedKey(parentBlock.getParentKey())
+        : generateRandomKey();
 
     const newContentState = ContentState.createFromBlockArray(
       blockMap
         .filter(block => block !== null)
         .map((block, index) => {
           if (block === currentBlock) {
-            const splittedBlockType = (!parentHasWrapper && (hasWrapper || !parentBlock.getParentKey()) ?
-                'unstyled' :
-                parentBlock.getType()
-            );
+            const splittedBlockType =
+              !parentHasWrapper && (hasWrapper || !parentBlock.getParentKey())
+                ? 'unstyled'
+                : parentBlock.getType();
             const splittedBlock = new ContentBlock({
               key: targetKey,
               type: splittedBlockType,
               depth: parentBlock ? parentBlock.getDepth() : 0,
               text: currentBlock.getText().slice(selectionState.getEndOffset()),
-              characterList: currentBlock.getCharacterList().slice(selectionState.getEndOffset())
+              characterList: currentBlock
+                .getCharacterList()
+                .slice(selectionState.getEndOffset()),
             });
 
             // if we are on an empty block when we split we should remove it
@@ -520,16 +511,20 @@ const NestedTextEditorUtil = {
                 key: block.getKey(),
                 type: block.getType(),
                 depth: block.getDepth(),
-                text: currentBlock.getText().slice(0, selectionState.getStartOffset()),
-                characterList: currentBlock.getCharacterList().slice(0, selectionState.getStartOffset())
+                text: currentBlock
+                  .getText()
+                  .slice(0, selectionState.getStartOffset()),
+                characterList: currentBlock
+                  .getCharacterList()
+                  .slice(0, selectionState.getStartOffset()),
               }),
-              splittedBlock
+              splittedBlock,
             ];
           }
           return block;
         })
         .filter(block => block !== null)
-        .reduce((a, b) => a.concat(b), [])
+        .reduce((a, b) => a.concat(b), []),
     );
 
     return EditorState.push(
@@ -542,25 +537,25 @@ const NestedTextEditorUtil = {
           focusKey: targetKey,
           focusOffset: 0,
           isBackward: false,
-        })
+        }),
       }),
-      'split-block'
+      'split-block',
     );
-
-  }
+  },
 };
 
 function getFirstAvailableLeafBeforeBlock(
   block: ContentBlock,
   contentState: ContentState,
-  condition: Function = function() {}
+  condition: Function = function() {},
 ): ContentBlock {
   let previousLeafBlock = contentState.getBlockBefore(block.getKey());
 
-  while (!!previousLeafBlock &&
+  while (
+    !!previousLeafBlock &&
     contentState.getBlockChildren(previousLeafBlock.getKey()).size !== 0 &&
     !condition(previousLeafBlock)
-    ) {
+  ) {
     previousLeafBlock = contentState.getBlockBefore(previousLeafBlock.getKey());
   }
 
@@ -570,15 +565,16 @@ function getFirstAvailableLeafBeforeBlock(
 function getFirstAvailableLeafAfterBlock(
   block: ContentBlock,
   contentState: ContentState,
-  condition: Function = function() {}
+  condition: Function = function() {},
 ): ContentBlock {
   let nextLeafBlock = contentState.getBlockAfter(block.getKey());
 
-  while (!!nextLeafBlock &&
+  while (
+    !!nextLeafBlock &&
     contentState.getBlockChildren(nextLeafBlock.getKey()).size !== 0 &&
     contentState.getBlockAfter(nextLeafBlock.getKey()) &&
     !condition(nextLeafBlock)
-    ) {
+  ) {
     nextLeafBlock = contentState.getBlockAfter(nextLeafBlock.getKey());
   }
 

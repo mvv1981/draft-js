@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule generateNestedKey
- * @typechecks
+ * @format
  * @flow
  */
 
@@ -20,10 +20,7 @@ const generateRandomKey = require('generateRandomKey');
  * supplied it will be used, otherwise a new random key will be
  * created.
  */
-function generateNestedKey(
-  parentKey: string,
-  childKey: ?string
-): string {
+function generateNestedKey(parentKey: string, childKey: ?string): string {
   const key = childKey || generateRandomKey();
   return parentKey + '/' + key;
 }

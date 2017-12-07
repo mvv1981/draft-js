@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule DraftEditorContents.react
- * @typechecks
+ * @format
  * @flow
  */
 
@@ -64,10 +64,8 @@ class DraftEditorContents extends React.Component {
     // rendered state, there's nothing new to be done.
     if (
       prevEditorState === nextEditorState ||
-      (
-        nextNativeContent !== null &&
-        nextEditorState.getCurrentContent() === nextNativeContent
-      ) ||
+      (nextNativeContent !== null &&
+        nextEditorState.getCurrentContent() === nextNativeContent) ||
       (wasComposing && nowComposing)
     ) {
       return false;
@@ -102,23 +100,25 @@ class DraftEditorContents extends React.Component {
     const blockMapTree = content.getBlockDescendants();
     const blockMap = blockMapTree.getIn(['__ROOT__', 'firstLevelBlocks']);
 
-    return <DraftEditorBlocks
-      type="contents"
-      selection={selection}
-      forceSelection={forceSelection}
-      decorator={decorator}
-      directionMap={directionMap}
-      blockMap={blockMap}
-      blockMapTree={blockMapTree}
-      blockStyleFn={blockStyleFn}
-      blockRendererFn={blockRendererFn}
-      blockRenderMap={blockRenderMap}
-      customStyleMap={customStyleMap}
-      content={content}
-      getBlockTree={editorState.getBlockTree.bind(editorState)}
-      getBlockChildren={content.getBlockChildren.bind(content)}
-      getBlockDescendants={content.getBlockDescendants.bind(content)}
-    />;
+    return (
+      <DraftEditorBlocks
+        type="contents"
+        selection={selection}
+        forceSelection={forceSelection}
+        decorator={decorator}
+        directionMap={directionMap}
+        blockMap={blockMap}
+        blockMapTree={blockMapTree}
+        blockStyleFn={blockStyleFn}
+        blockRendererFn={blockRendererFn}
+        blockRenderMap={blockRenderMap}
+        customStyleMap={customStyleMap}
+        content={content}
+        getBlockTree={editorState.getBlockTree.bind(editorState)}
+        getBlockChildren={content.getBlockChildren.bind(content)}
+        getBlockDescendants={content.getBlockDescendants.bind(content)}
+      />
+    );
   }
 }
 
