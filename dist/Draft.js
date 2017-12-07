@@ -3109,7 +3109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule generateNestedKey
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -7351,7 +7351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorBlocks.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -7752,7 +7752,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule DraftEditorContents.react
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 
@@ -8856,7 +8856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule NestedTextEditorUtil
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 	var CharacterMetadata = __webpack_require__(4);
@@ -8877,7 +8877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var EMPTY_CHAR_LIST = List(Repeat(CharacterMetadata.create(), EMPTY_CHAR.length));
 
 	var DefaultBlockRenderMap = new Immutable.Map(new Immutable.fromJS(DefaultDraftBlockRenderMap.toJS()).mergeDeep(new Immutable.fromJS({
-	  'blockquote': {
+	  blockquote: {
 	    nestingEnabled: true
 	  },
 	  'unordered-list-item': {
@@ -13222,7 +13222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @providesModule splitBlockWithNestingInContentState
-	 * @typechecks
+	 * @format
 	 * 
 	 */
 

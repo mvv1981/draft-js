@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule splitBlockWithNestingInContentState
- * @typechecks
+ * @format
  * @flow
  */
 
@@ -21,9 +21,7 @@ const ContentBlock = require('./ContentBlock');
 import type ContentState from './ContentState';
 import type SelectionState from './SelectionState';
 
-const {
-  List
-} = Immutable;
+const { List } = Immutable;
 
 /*
   Split a block and create a new nested block,
