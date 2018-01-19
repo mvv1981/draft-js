@@ -19,6 +19,7 @@ const Immutable = require('immutable');
 const generateNestedKey = require('generateNestedKey');
 const generateRandomKey = require('generateRandomKey');
 const splitBlockWithNestingInContentState = require('splitBlockWithNestingInContentState');
+const splitNestedBlockInContentState = require('splitNestedBlockInContentState');
 
 import type {DraftBlockType} from 'DraftBlockType';
 import type {DraftEditorCommand} from 'DraftEditorCommand';
@@ -446,6 +447,10 @@ const NestedTextEditorUtil = {
       splitBlockWithNestingInContentState(contentState, selectionState),
       'split-block',
     );
+  },
+
+  onSplitCurrentBlock: function(contentState: ContentState, selectionState: any) {
+    return splitNestedBlockInContentState (contentState, selectionState);
   },
 
   onSplitParent: function(
