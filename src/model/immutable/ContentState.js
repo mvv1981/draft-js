@@ -180,7 +180,7 @@ class ContentState extends ContentStateRecord {
       .reverse()
       .reduce((treeMap, block) => {
         const key = block.getKey();
-        const parentKey = block.getParentKey();
+        const parentKey = block.getRootKey();
         const rootKey = block.getRootKey().length > 0 ? block.getRootKey() : '__ROOT__';
 
         // create one if does not exist

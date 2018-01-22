@@ -39,13 +39,14 @@ const experimentalTreeDataSupport = DraftFeatureFlags.draft_tree_data_support;
 const { List, Map, OrderedMap } = Immutable;
 
 const decodeBlockNodeConfig = (block: RawDraftContentBlock, entityMap: *): BlockNodeConfig => {
-  const { key, type, data, text, depth } = block;
+  const { key, rootKey, type, data, text, depth } = block;
 
   const blockNodeConfig: BlockNodeConfig = {
     text,
     depth: depth || 0,
     type: type || 'unstyled',
     key: key || generateRandomKey(),
+    rootKey: rootKey || '',
     data: Map(data),
     characterList: decodeCharacterList(block, entityMap)
   };

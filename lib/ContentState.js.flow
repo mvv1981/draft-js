@@ -154,8 +154,8 @@ class ContentState extends ContentStateRecord {
   getBlockDescendants() {
     return this.getBlockMap().reverse().reduce((treeMap, block) => {
       const key = block.getKey();
-      const parentKey = block.getParentKey();
-      const rootKey = '__ROOT__';
+      const parentKey = block.getRootKey();
+      const rootKey = block.getRootKey().length > 0 ? block.getRootKey() : '__ROOT__';
 
       // create one if does not exist
       const blockList = treeMap.get(key) ? treeMap : treeMap.set(key, new Immutable.Map({

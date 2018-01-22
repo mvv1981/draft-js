@@ -19,7 +19,7 @@ import type SelectionState from 'SelectionState';
 
 var BlockMapBuilder = require('BlockMapBuilder');
 
-var genNestedKey = require('generateNestedKey');
+var generateRandomKey = require('./generateRandomKey');
 var insertIntoList = require('insertIntoList');
 var invariant = require('invariant');
 
@@ -105,7 +105,7 @@ function insertFragmentIntoContentState(
 
     // Insert fragment blocks after the head and before the tail.
     fragment.slice(1, fragmentSize - 1).forEach(fragmentBlock => {
-        newBlockArr.push(fragmentBlock.set('key', genNestedKey(targetKey)));
+        newBlockArr.push(fragmentBlock.set('key', generateRandomKey()).set('rootKey', targetKey));
     });
 
     // Modify tail portion of block.
@@ -114,7 +114,8 @@ function insertFragmentIntoContentState(
     var prependToTail = fragment.last();
 
     var modifiedTail = prependToTail.merge({
-        key: genNestedKey(targetKey),
+      key: generateRandomKey(),
+      rootKey: targetKey,
       text: prependToTail.getText() + tailText,
       characterList: prependToTail.getCharacterList().concat(tailCharacters),
       data: prependToTail.getData(),

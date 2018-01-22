@@ -23,6 +23,7 @@ import type { InlineStyleRange } from './InlineStyleRange';
  */
 export type RawDraftContentBlock = {
   key: ?string;
+  rootKey: string;
   type: DraftBlockType;
   text: string;
   depth: ?number;

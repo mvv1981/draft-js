@@ -14,7 +14,7 @@
 'use strict';
 
 const Immutable = require('immutable');
-const generateNestedKey = require('generateNestedKey');
+const generateRandomKey = require('./generateRandomKey');
 const invariant = require('invariant');
 
 import type ContentState from 'ContentState';
@@ -32,7 +32,7 @@ function splitNestedBlockInContentState(
     var offset = selectionState.getAnchorOffset();
     var blockMap = contentState.getBlockMap();
     var blockToSplit = blockMap.get(key);
-    var getParentKey = blockToSplit.getParentKey();
+    var getParentKey = blockToSplit.rootKey;
 
     var text = blockToSplit.getText();
     var chars = blockToSplit.getCharacterList();
@@ -40,11 +40,13 @@ function splitNestedBlockInContentState(
     var blockAbove = blockToSplit.merge({
         text: text.slice(0, offset),
         characterList: chars.slice(0, offset),
-        key: generateNestedKey(getParentKey),
+        key: generateRandomKey(),
+        rootKey: getParentKey
     });
 
     var blockBelow = blockAbove.merge({
-        key: generateNestedKey(getParentKey),
+        key: generateRandomKey(),
+        rootKey: getParentKey,
         text: text.slice(offset),
         characterList: chars.slice(offset),
         data: Map()
@@ -53,6 +55,7 @@ function splitNestedBlockInContentState(
     var newEmptyBlock =  blockToSplit.merge({
         text: '',
         characterList: List(),
+        rootKey: getParentKey
     });
 
     var blocksBefore = blockMap.toSeq().takeUntil(function (v) {
@@ -62,15 +65,39 @@ function splitNestedBlockInContentState(
         return v === blockToSplit;
     }).rest();
 
-    var newBlocks = blocksBefore.concat(
-        [
-            [blockAbove.getKey(), blockAbove],
-            [newEmptyBlock.getKey(), newEmptyBlock],
-            [blockBelow.getKey(), blockBelow]
-        ],
-        blocksAfter)
-        .toOrderedMap();
+    var newBlocks;
 
+    if (blockAbove.text.length === 0) {
+        newBlocks = blocksBefore.concat([[blockAbove.getKey(), blockAbove], [blockBelow.getKey(), blockBelow]], blocksAfter).toOrderedMap();
+        return contentState.merge({
+            blockMap: newBlocks,
+            selectionBefore: selectionState,
+            selectionAfter: selectionState.merge({
+                anchorKey: blockAbove.getKey(),
+                anchorOffset: 0,
+                focusKey: blockAbove.getKey(),
+                focusOffset: 0,
+                isBackward: false
+            })
+        });
+    }
+
+    if (blockAbove.text.length !== 0 && blockBelow.text.length === 0) {
+        newBlocks = blocksBefore.concat([[blockAbove.getKey(), blockAbove], [newEmptyBlock.getKey(), newEmptyBlock]], blocksAfter).toOrderedMap();
+        return contentState.merge({
+            blockMap: newBlocks,
+            selectionBefore: selectionState,
+            selectionAfter: selectionState.merge({
+                anchorKey: newEmptyBlock.getKey(),
+                anchorOffset: 0,
+                focusKey: newEmptyBlock.getKey(),
+                focusOffset: 0,
+                isBackward: false
+            })
+        });
+    }
+
+    newBlocks = blocksBefore.concat([[blockAbove.getKey(), blockAbove], [newEmptyBlock.getKey(), newEmptyBlock], [blockBelow.getKey(), blockBelow]], blocksAfter).toOrderedMap();
     return contentState.merge({
         blockMap: newBlocks,
         selectionBefore: selectionState,
