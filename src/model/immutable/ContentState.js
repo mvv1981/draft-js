@@ -181,7 +181,7 @@ class ContentState extends ContentStateRecord {
       .reduce((treeMap, block) => {
         const key = block.getKey();
         const parentKey = block.getParentKey();
-        const rootKey = '__ROOT__';
+        const rootKey = block.getRootKey().length > 0 ? block.getRootKey() : '__ROOT__';
 
         // create one if does not exist
         const blockList = (

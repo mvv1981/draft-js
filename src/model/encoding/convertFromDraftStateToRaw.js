@@ -44,6 +44,7 @@ function convertFromDraftStateToRaw(
 
         rawBlocks.push({
             key: blockKey,
+            rootKey: block.getRootKey(),
             text: block.getText(),
             type: block.getType(),
             depth: block.getDepth(),
