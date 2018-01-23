@@ -180,8 +180,7 @@ class ContentState extends ContentStateRecord {
       .reverse()
       .reduce((treeMap, block) => {
         const key = block.getKey();
-        const parentKey = block.getRootKey();
-        const rootKey = block.getRootKey().length > 0 ? block.getRootKey() : '__ROOT__';
+        const parentKey = block.getParentKey().length > 0 ? block.getParentKey() : '__ROOT__';
 
         // create one if does not exist
         const blockList = (
@@ -220,19 +219,19 @@ class ContentState extends ContentStateRecord {
           // we are root level block
           // lets create a new key called firstLevelBlocks
           const rootLevelBlocks = (
-            blockList.get(rootKey) ?
+            blockList.get(parentKey) ?
               blockList :
-              blockList.set(rootKey, new Immutable.Map({
+              blockList.set(parentKey, new Immutable.Map({
                 firstLevelBlocks: new Immutable.OrderedMap(),
                 childrenBlocks: new Immutable.Set()
               }))
           );
 
-          const rootFirstLevelBlocks = rootLevelBlocks.setIn([rootKey, 'firstLevelBlocks', key], block);
+          const rootFirstLevelBlocks = rootLevelBlocks.setIn([parentKey, 'firstLevelBlocks', key], block);
 
           const addToRootChildren = rootFirstLevelBlocks.setIn(
-            [rootKey, 'childrenBlocks'],
-            rootFirstLevelBlocks.getIn([rootKey, 'childrenBlocks'])
+            [parentKey, 'childrenBlocks'],
+            rootFirstLevelBlocks.getIn([parentKey, 'childrenBlocks'])
               .add(
                 // we include all the current block children and itself
                 rootFirstLevelBlocks.getIn([key, 'childrenBlocks']).add(block)

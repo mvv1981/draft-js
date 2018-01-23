@@ -33,7 +33,7 @@ const defaultRecord: BlockNodeConfig = {
   characterList: List(),
   depth: 0,
   data: Map(),
-  rootKey: '',
+  parentKey: '',
 };
 
 const ContentBlockRecord = Record(defaultRecord);
@@ -86,14 +86,7 @@ class ContentBlock extends ContentBlockRecord implements BlockNode {
   }
 
   getParentKey(): string {
-    const key = this.getKey();
-    const parts = key.split('/');
-
-    return parts.slice(0, -1).join('/');
-  }
-
-  getRootKey(): string {
-    return this.get('rootKey');
+    return this.get('parentKey');
   }
 
   hasParent(): boolean {

@@ -1499,7 +1499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  characterList: List(),
 	  depth: 0,
 	  data: Map(),
-	  rootKey: ''
+	  parentKey: ''
 	};
 
 	var ContentBlockRecord = Record(defaultRecord);
@@ -1558,14 +1558,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  ContentBlock.prototype.getParentKey = function getParentKey() {
-	    var key = this.getKey();
-	    var parts = key.split('/');
-
-	    return parts.slice(0, -1).join('/');
-	  };
-
-	  ContentBlock.prototype.getRootKey = function getRootKey() {
-	    return this.get('rootKey');
+	    return this.get('parentKey');
 	  };
 
 	  ContentBlock.prototype.hasParent = function hasParent() {
@@ -2548,8 +2541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ContentState.prototype.getBlockDescendants = function getBlockDescendants() {
 	    return this.getBlockMap().reverse().reduce(function (treeMap, block) {
 	      var key = block.getKey();
-	      var parentKey = block.getRootKey();
-	      var rootKey = block.getRootKey().length > 0 ? block.getRootKey() : '__ROOT__';
+	      var parentKey = block.getParentKey().length > 0 ? block.getParentKey() : '__ROOT__';
 
 	      // create one if does not exist
 	      var blockList = treeMap.get(key) ? treeMap : treeMap.set(key, new Immutable.Map({
@@ -2574,14 +2566,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        // we are root level block
 	        // lets create a new key called firstLevelBlocks
-	        var rootLevelBlocks = blockList.get(rootKey) ? blockList : blockList.set(rootKey, new Immutable.Map({
+	        var rootLevelBlocks = blockList.get(parentKey) ? blockList : blockList.set(parentKey, new Immutable.Map({
 	          firstLevelBlocks: new Immutable.OrderedMap(),
 	          childrenBlocks: new Immutable.Set()
 	        }));
 
-	        var rootFirstLevelBlocks = rootLevelBlocks.setIn([rootKey, 'firstLevelBlocks', key], block);
+	        var rootFirstLevelBlocks = rootLevelBlocks.setIn([parentKey, 'firstLevelBlocks', key], block);
 
-	        var addToRootChildren = rootFirstLevelBlocks.setIn([rootKey, 'childrenBlocks'], rootFirstLevelBlocks.getIn([rootKey, 'childrenBlocks']).add(
+	        var addToRootChildren = rootFirstLevelBlocks.setIn([parentKey, 'childrenBlocks'], rootFirstLevelBlocks.getIn([parentKey, 'childrenBlocks']).add(
 	        // we include all the current block children and itself
 	        rootFirstLevelBlocks.getIn([key, 'childrenBlocks']).add(block)));
 
@@ -9555,7 +9547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        rawBlocks.push({
 	            key: blockKey,
-	            rootKey: block.getRootKey(),
+	            parentKey: block.getParentKey(),
 	            text: block.getText(),
 	            type: block.getType(),
 	            depth: block.getDepth(),
@@ -9633,7 +9625,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var decodeBlockNodeConfig = function decodeBlockNodeConfig(block, entityMap) {
 	  var key = block.key,
-	      rootKey = block.rootKey,
+	      parentKey = block.parentKey,
 	      type = block.type,
 	      data = block.data,
 	      text = block.text,
@@ -9645,7 +9637,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    depth: depth || 0,
 	    type: type || 'unstyled',
 	    key: key || generateRandomKey(),
-	    rootKey: rootKey || '',
+	    parentKey: parentKey || '',
 	    data: Map(data),
 	    characterList: decodeCharacterList(block, entityMap)
 	  };
@@ -11741,7 +11733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Insert fragment blocks after the head and before the tail.
 	    fragment.slice(1, fragmentSize - 1).forEach(function (fragmentBlock) {
-	      newBlockArr.push(fragmentBlock.set('key', generateRandomKey()).set('rootKey', targetKey));
+	      newBlockArr.push(fragmentBlock.set('key', generateRandomKey()).set('parentKey', targetKey));
 	    });
 
 	    // Modify tail portion of block.
@@ -11751,7 +11743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var modifiedTail = prependToTail.merge({
 	      key: generateRandomKey(),
-	      rootKey: targetKey,
+	      parentKey: targetKey,
 	      text: prependToTail.getText() + tailText,
 	      characterList: prependToTail.getCharacterList().concat(tailCharacters),
 	      data: prependToTail.getData()
@@ -13275,7 +13267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var offset = selectionState.getAnchorOffset();
 	    var blockMap = contentState.getBlockMap();
 	    var blockToSplit = blockMap.get(key);
-	    var getParentKey = blockToSplit.rootKey;
+	    var parentKey = blockToSplit.getParentKey();
 
 	    var text = blockToSplit.getText();
 	    var chars = blockToSplit.getCharacterList();
@@ -13284,12 +13276,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        text: text.slice(0, offset),
 	        characterList: chars.slice(0, offset),
 	        key: generateRandomKey(),
-	        rootKey: getParentKey
+	        parentKey: parentKey
 	    });
 
 	    var blockBelow = blockAbove.merge({
 	        key: generateRandomKey(),
-	        rootKey: getParentKey,
+	        parentKey: parentKey,
 	        text: text.slice(offset),
 	        characterList: chars.slice(offset),
 	        data: Map()
@@ -13298,7 +13290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var newEmptyBlock = blockToSplit.merge({
 	        text: '',
 	        characterList: List(),
-	        rootKey: getParentKey
+	        parentKey: parentKey
 	    });
 
 	    var blocksBefore = blockMap.toSeq().takeUntil(function (v) {

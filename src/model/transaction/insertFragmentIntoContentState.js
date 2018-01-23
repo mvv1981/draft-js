@@ -105,7 +105,7 @@ function insertFragmentIntoContentState(
 
     // Insert fragment blocks after the head and before the tail.
     fragment.slice(1, fragmentSize - 1).forEach(fragmentBlock => {
-        newBlockArr.push(fragmentBlock.set('key', generateRandomKey()).set('rootKey', targetKey));
+        newBlockArr.push(fragmentBlock.set('key', generateRandomKey()).set('parentKey', targetKey));
     });
 
     // Modify tail portion of block.
@@ -115,7 +115,7 @@ function insertFragmentIntoContentState(
 
     var modifiedTail = prependToTail.merge({
       key: generateRandomKey(),
-      rootKey: targetKey,
+      parentKey: targetKey,
       text: prependToTail.getText() + tailText,
       characterList: prependToTail.getCharacterList().concat(tailCharacters),
       data: prependToTail.getData(),

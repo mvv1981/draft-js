@@ -25,7 +25,7 @@ export type BlockNodeConfig = {
   data?: Map<any, any>;
   depth?: number;
   key?: BlockNodeKey;
-  rootKey: string;
+  parentKey: string;
   text?: string;
   type?: DraftBlockType;
 };

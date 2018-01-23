@@ -42,14 +42,14 @@ const decodeBlockNodeConfig = (
   block: RawDraftContentBlock,
   entityMap: *,
 ): BlockNodeConfig => {
-  const {key, rootKey, type, data, text, depth} = block;
+  const {key, parentKey, type, data, text, depth} = block;
 
   const blockNodeConfig: BlockNodeConfig = {
     text,
     depth: depth || 0,
     type: type || 'unstyled',
     key: key || generateRandomKey(),
-    rootKey: rootKey || '',
+    parentKey: parentKey || '',
     data: Map(data),
     characterList: decodeCharacterList(block, entityMap),
   };

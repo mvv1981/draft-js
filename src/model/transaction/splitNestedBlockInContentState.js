@@ -32,7 +32,7 @@ function splitNestedBlockInContentState(
     var offset = selectionState.getAnchorOffset();
     var blockMap = contentState.getBlockMap();
     var blockToSplit = blockMap.get(key);
-    var getParentKey = blockToSplit.rootKey;
+    var parentKey = blockToSplit.getParentKey();
 
     var text = blockToSplit.getText();
     var chars = blockToSplit.getCharacterList();
@@ -41,12 +41,12 @@ function splitNestedBlockInContentState(
         text: text.slice(0, offset),
         characterList: chars.slice(0, offset),
         key: generateRandomKey(),
-        rootKey: getParentKey
+        parentKey
     });
 
     var blockBelow = blockAbove.merge({
         key: generateRandomKey(),
-        rootKey: getParentKey,
+        parentKey,
         text: text.slice(offset),
         characterList: chars.slice(offset),
         data: Map()
@@ -55,7 +55,7 @@ function splitNestedBlockInContentState(
     var newEmptyBlock =  blockToSplit.merge({
         text: '',
         characterList: List(),
-        rootKey: getParentKey
+        parentKey
     });
 
     var blocksBefore = blockMap.toSeq().takeUntil(function (v) {
