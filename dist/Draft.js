@@ -11731,9 +11731,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    newBlockArr.push(modifiedHead);
 
+	    var keysMap = {};
+
+	    fragment.slice(1, fragmentSize - 1).keySeq().toArray().forEach(function (block) {
+	      keysMap[block] = generateRandomKey();
+	    });
+
 	    // Insert fragment blocks after the head and before the tail.
 	    fragment.slice(1, fragmentSize - 1).forEach(function (fragmentBlock) {
-	      newBlockArr.push(fragmentBlock.set('key', generateRandomKey()).set('parentKey', targetKey));
+	      if (fragment.get(fragmentBlock.getParentKey()).getType() === 'snippet') {
+	        newBlockArr.push(fragmentBlock.set('parentKey', modifiedHead.getKey()).set('key', keysMap[fragmentBlock.key]));
+	      } else {
+	        newBlockArr.push(fragmentBlock.set('parentKey', keysMap[fragmentBlock.parentKey]).set('key', keysMap[fragmentBlock.key]));
+	      }
 	    });
 
 	    // Modify tail portion of block.
