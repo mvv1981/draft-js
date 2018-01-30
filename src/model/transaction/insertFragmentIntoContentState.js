@@ -105,33 +105,18 @@ function insertFragmentIntoContentState(
 
     var keysMap = {};
 
-    fragment.slice(1, fragmentSize - 1).keySeq().toArray().forEach(block => {
+    fragment.slice(1, fragmentSize).keySeq().toArray().forEach(block => {
         keysMap[block] = generateRandomKey();
     });
 
     // Insert fragment blocks after the head and before the tail.
-    fragment.slice(1, fragmentSize - 1).forEach(fragmentBlock => {
+    fragment.slice(1, fragmentSize).forEach(fragmentBlock => {
         if (fragment.get(fragmentBlock.getParentKey()).getType() === 'snippet') {
             newBlockArr.push(fragmentBlock.set('parentKey', modifiedHead.getKey()).set('key', keysMap[fragmentBlock.key]));
         } else {
             newBlockArr.push(fragmentBlock.set('parentKey', keysMap[fragmentBlock.parentKey]).set('key', keysMap[fragmentBlock.key]));
         }
     });
-
-    // Modify tail portion of block.
-    var tailText = text.slice(targetOffset, blockSize);
-    var tailCharacters = chars.slice(targetOffset, blockSize);
-    var prependToTail = fragment.last();
-
-    var modifiedTail = prependToTail.merge({
-      key: generateRandomKey(),
-      parentKey: targetKey,
-      text: prependToTail.getText() + tailText,
-      characterList: prependToTail.getCharacterList().concat(tailCharacters),
-      data: prependToTail.getData(),
-    });
-
-    newBlockArr.push(modifiedTail);
   });
 
   finalOffset = fragment.last().getLength();
