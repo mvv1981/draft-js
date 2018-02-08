@@ -79,7 +79,7 @@ function insertFragmentIntoContentState(
 
   var newBlockArr = [];
 
-  contentState.getBlockMap().forEach((block, blockKey) => {
+  contentState.getBlockMap().forEach(function (block, blockKey) {
     if (blockKey !== targetKey) {
       newBlockArr.push(block);
       return;
@@ -89,7 +89,6 @@ function insertFragmentIntoContentState(
     var chars = block.getCharacterList();
 
     // Modify head portion of block.
-    var blockSize = text.length;
     var headText = text.slice(0, targetOffset);
     var headCharacters = chars.slice(0, targetOffset);
     var appendToHead = fragment.first();
@@ -101,36 +100,55 @@ function insertFragmentIntoContentState(
       data: appendToHead.getData(),
     });
 
-    newBlockArr.push(modifiedHead);
+      if (appendToHead.getType() === 'snippet') {
+          newBlockArr.push(modifiedHead);
+          var keysMap = {};
 
-    var keysMap = {};
+          fragment.slice(1, fragmentSize).keySeq().toArray().forEach(block => {
+              keysMap[block] = generateRandomKey();
+          });
 
-    fragment.slice(1, fragmentSize).keySeq().toArray().forEach(block => {
-        keysMap[block] = generateRandomKey();
-    });
+          // Insert fragment blocks after the head and before the tail.
+          fragment.slice(1, fragmentSize).forEach(fragmentBlock => {
+              if (fragment.get(fragmentBlock.getParentKey()) && fragment.get(fragmentBlock.getParentKey()).getType() === 'snippet') {
+                  newBlockArr.push(fragmentBlock.set('parentKey', modifiedHead.getKey()).set('key', keysMap[fragmentBlock.key]));
+              } else {
+                  newBlockArr.push(fragmentBlock.set('parentKey', keysMap[fragmentBlock.parentKey] || modifiedHead.getParentKey()).set('key', keysMap[fragmentBlock.key]));
+              }
+          });
+      } else {
+          newBlockArr.push(modifiedHead);
+          var keysMap = {};
 
-    // Insert fragment blocks after the head and before the tail.
-    fragment.slice(1, fragmentSize).forEach(fragmentBlock => {
-        if (fragment.get(fragmentBlock.getParentKey()).getType() === 'snippet') {
-            newBlockArr.push(fragmentBlock.set('parentKey', modifiedHead.getKey()).set('key', keysMap[fragmentBlock.key]));
-        } else {
-            newBlockArr.push(fragmentBlock.set('parentKey', keysMap[fragmentBlock.parentKey]).set('key', keysMap[fragmentBlock.key]));
-        }
-    });
+          if (fragment.first().getType() !== 'paragraph') {
+              keysMap[fragment.key] = modifiedHead.getKey();
+          }
+
+          // Insert fragment blocks after the head and before the tail.
+          fragment.slice(1, fragmentSize).forEach(fragmentBlock => {
+              if (!fragmentBlock.parentKey || !fragmentBlock.parentKey.length) {
+                  newBlockArr.push(fragmentBlock.set('parentKey', modifiedHead.getParentKey()))
+              } else if (keysMap[fragmentBlock.parentKey]) {
+                  newBlockArr.push(fragmentBlock.set('parentKey', keysMap[fragmentBlock.parentKey]))
+              } else {
+                  newBlockArr.push(fragmentBlock);
+              }
+          });
+      }
   });
 
-  finalOffset = fragment.last().getLength();
+  finalKey = targetKey;
 
   return contentState.merge({
-    blockMap: BlockMapBuilder.createFromArray(newBlockArr),
-    selectionBefore: selectionState,
-    selectionAfter: selectionState.merge({
-      anchorKey: finalKey,
-      anchorOffset: finalOffset,
-      focusKey: finalKey,
-      focusOffset: finalOffset,
-      isBackward: false,
-    }),
+      blockMap: BlockMapBuilder.createFromArray(newBlockArr),
+      selectionBefore: selectionState,
+      selectionAfter: selectionState.merge({
+          anchorKey: finalKey,
+          anchorOffset: 0,
+          focusKey: finalKey,
+          focusOffset: 0,
+          isBackward: false
+      })
   });
 }
 
