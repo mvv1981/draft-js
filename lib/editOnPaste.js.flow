@@ -118,6 +118,31 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
 
     // If there is html paste data, try to parse that.
     if (html) {
+      var documentFragment = document.createRange().createContextualFragment(html);
+      var metaTags = documentFragment.querySelectorAll('meta');
+      var tagsContents = [];
+      metaTags.forEach(node => {
+        var content = node.getAttribute('content');
+        if (content) {
+          tagsContents.push(content);
+        }
+      });
+
+      if (tagsContents.length) {
+        var character = CharacterMetadata.create({
+          style: editorState.getCurrentInlineStyle(),
+          entity: getEntityKeyForSelection(editorState.getCurrentContent(), editorState.getSelection())
+        });
+
+        var currentBlockType = RichTextEditorUtil.getCurrentBlockType(editorState);
+
+        var textFragment = DraftPasteProcessor.processText(textBlocks, character, currentBlockType);
+
+        var textMap = BlockMapBuilder.createFromArray(textFragment);
+        editor.update(insertFragment(editor._latestEditorState, textMap));
+        return;
+      }
+
       var htmlFragment = DraftPasteProcessor.processHTML(html, editor.props.blockRenderMap);
       if (htmlFragment) {
         const { contentBlocks, entityMap } = htmlFragment;
