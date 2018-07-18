@@ -7267,13 +7267,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var blocks = [];
 	    var currentWrapperElement = null;
 	    var currentWrapperTemplate = null;
+	    var currentComponentTemplate = null;
 	    var currentDepth = null;
 	    var currentWrappedBlocks = void 0;
 	    var key = void 0,
 	        blockType = void 0,
 	        child = void 0,
 	        childProps = void 0,
-	        wrapperTemplate = void 0;
+	        wrapperTemplate = void 0,
+	        componentTemplate = void 0;
 
 	    blockMap.forEach(function (block) {
 	      key = block.getKey();
@@ -7322,6 +7324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var configForType = nullthrows(blockRenderMap.get(blockType));
 
 	      wrapperTemplate = configForType.wrapper;
+	      componentTemplate = configForType.component;
 
 	      var useNewWrapper = wrapperTemplate !== currentWrapperTemplate;
 
@@ -7354,7 +7357,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      child = React.createElement(Element, childProps, React.createElement(Component, componentProps));
 
-	      if (wrapperTemplate) {
+	      if (componentTemplate) {
+	        currentWrappedBlocks = [];
+	        currentWrapperElement = React.cloneElement(componentTemplate, {
+	          key: key + '-wrap',
+	          'data-offset-key': offsetKey
+	        }, currentWrappedBlocks);
+	        currentComponentTemplate = componentTemplate;
+	        blocks.push(currentWrapperElement);
+	        currentDepth = block.getDepth();
+	        nullthrows(currentWrappedBlocks).push(child);
+	      } else if (wrapperTemplate) {
 	        if (useNewWrapper) {
 	          currentWrappedBlocks = [];
 	          currentWrapperElement = React.cloneElement(wrapperTemplate, {

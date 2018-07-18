@@ -55,9 +55,10 @@ class DraftEditorBlocks extends React.Component {
     const blocks = [];
     let currentWrapperElement = null;
     let currentWrapperTemplate = null;
+    let currentComponentTemplate = null;
     let currentDepth = null;
     let currentWrappedBlocks;
-    let key, blockType, child, childProps, wrapperTemplate;
+    let key, blockType, child, childProps, wrapperTemplate, componentTemplate;
 
     blockMap.forEach(block => {
       key = block.getKey();
@@ -104,6 +105,7 @@ class DraftEditorBlocks extends React.Component {
       const configForType = nullthrows(blockRenderMap.get(blockType));
 
       wrapperTemplate = configForType.wrapper;
+      componentTemplate = configForType.component;
 
       const useNewWrapper = wrapperTemplate !== currentWrapperTemplate;
 
@@ -137,7 +139,17 @@ class DraftEditorBlocks extends React.Component {
 
       child = React.createElement(Element, childProps, <Component {...componentProps} />);
 
-      if (wrapperTemplate) {
+      if (componentTemplate) {
+        currentWrappedBlocks = [];
+        currentWrapperElement = React.cloneElement(componentTemplate, {
+          key: key + '-wrap',
+          'data-offset-key': offsetKey
+        }, currentWrappedBlocks);
+        currentComponentTemplate = componentTemplate;
+        blocks.push(currentWrapperElement);
+        currentDepth = block.getDepth();
+        nullthrows(currentWrappedBlocks).push(child);
+      } else if (wrapperTemplate) {
         if (useNewWrapper) {
           currentWrappedBlocks = [];
           currentWrapperElement = React.cloneElement(wrapperTemplate, {
