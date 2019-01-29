@@ -79,6 +79,7 @@ class DraftEditorContents extends React.Component {
       blockRendererFn,
       blockStyleFn,
       customStyleMap,
+      customStyleFn,
       editorState
     } = this.props;
 
@@ -90,7 +91,7 @@ class DraftEditorContents extends React.Component {
     const blockMapTree = content.getBlockDescendants();
     const blockMap = blockMapTree.getIn(['__ROOT__', 'firstLevelBlocks']);
 
-    return <DraftEditorBlocks type="contents" selection={selection} forceSelection={forceSelection} decorator={decorator} directionMap={directionMap} blockMap={blockMap} blockMapTree={blockMapTree} blockStyleFn={blockStyleFn} blockRendererFn={blockRendererFn} blockRenderMap={blockRenderMap} customStyleMap={customStyleMap} content={content} getBlockTree={editorState.getBlockTree.bind(editorState)} getBlockChildren={content.getBlockChildren.bind(content)} getBlockDescendants={content.getBlockDescendants.bind(content)} />;
+    return <DraftEditorBlocks type="contents" selection={selection} forceSelection={forceSelection} decorator={decorator} directionMap={directionMap} blockMap={blockMap} blockMapTree={blockMapTree} blockStyleFn={blockStyleFn} blockRendererFn={blockRendererFn} blockRenderMap={blockRenderMap} customStyleMap={customStyleMap} customStyleFn={customStyleFn} contentState={content} getBlockTree={editorState.getBlockTree.bind(editorState)} getBlockChildren={content.getBlockChildren.bind(content)} getBlockDescendants={content.getBlockDescendants.bind(content)} />;
   }
 }
 

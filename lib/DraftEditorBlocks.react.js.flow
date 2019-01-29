@@ -36,11 +36,12 @@ class DraftEditorBlocks extends React.Component {
   render(): React.Element {
     const {
       type,
-      content,
+      contentState,
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
       customStyleMap,
+      customStyleFn,
       blockMap,
       blockMapTree,
       selection,
@@ -79,8 +80,9 @@ class DraftEditorBlocks extends React.Component {
       const componentProps = {
         block,
         blockProps: customProps,
-        contentState: content,
+        contentState,
         customStyleMap,
+        customStyleFn,
         decorator,
         direction,
         directionMap,
@@ -145,7 +147,6 @@ class DraftEditorBlocks extends React.Component {
           key: key + '-wrap',
           'data-offset-key': offsetKey
         }, currentWrappedBlocks);
-        currentComponentTemplate = componentTemplate;
         blocks.push(currentWrapperElement);
         currentDepth = block.getDepth();
         nullthrows(currentWrappedBlocks).push(child);

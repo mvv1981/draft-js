@@ -7248,11 +7248,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var _props = this.props,
 	        type = _props.type,
-	        content = _props.content,
+	        contentState = _props.contentState,
 	        blockRenderMap = _props.blockRenderMap,
 	        blockRendererFn = _props.blockRendererFn,
 	        blockStyleFn = _props.blockStyleFn,
 	        customStyleMap = _props.customStyleMap,
+	        customStyleFn = _props.customStyleFn,
 	        blockMap = _props.blockMap,
 	        blockMapTree = _props.blockMapTree,
 	        selection = _props.selection,
@@ -7298,8 +7299,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var componentProps = {
 	        block: block,
 	        blockProps: customProps,
-	        contentState: content,
+	        contentState: contentState,
 	        customStyleMap: customStyleMap,
+	        customStyleFn: customStyleFn,
 	        decorator: decorator,
 	        direction: direction,
 	        directionMap: directionMap,
@@ -7363,7 +7365,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          key: key + '-wrap',
 	          'data-offset-key': offsetKey
 	        }, currentWrappedBlocks);
-	        currentComponentTemplate = componentTemplate;
 	        blocks.push(currentWrapperElement);
 	        currentDepth = block.getDepth();
 	        nullthrows(currentWrappedBlocks).push(child);
@@ -7693,6 +7694,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        blockRendererFn = _props.blockRendererFn,
 	        blockStyleFn = _props.blockStyleFn,
 	        customStyleMap = _props.customStyleMap,
+	        customStyleFn = _props.customStyleFn,
 	        editorState = _props.editorState;
 
 
@@ -7716,7 +7718,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      blockRendererFn: blockRendererFn,
 	      blockRenderMap: blockRenderMap,
 	      customStyleMap: customStyleMap,
-	      content: content,
+	      customStyleFn: customStyleFn,
+	      contentState: content,
 	      getBlockTree: editorState.getBlockTree.bind(editorState),
 	      getBlockChildren: content.getBlockChildren.bind(content),
 	      getBlockDescendants: content.getBlockDescendants.bind(content)
