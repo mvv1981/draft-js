@@ -115,7 +115,7 @@ class DraftEditorContents extends React.Component {
         blockRenderMap={blockRenderMap}
         customStyleMap={customStyleMap}
         customStyleFn={customStyleFn}
-        content={content}
+        contentState={content}
         getBlockTree={editorState.getBlockTree.bind(editorState)}
         getBlockChildren={content.getBlockChildren.bind(content)}
         getBlockDescendants={content.getBlockDescendants.bind(content)}

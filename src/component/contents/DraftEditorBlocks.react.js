@@ -36,7 +36,7 @@ class DraftEditorBlocks extends React.Component {
   render(): React.Element {
     const {
       type,
-      content,
+      contentState,
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
@@ -80,7 +80,7 @@ class DraftEditorBlocks extends React.Component {
       const componentProps = {
         block,
         blockProps: customProps,
-        contentState: content,
+        contentState,
         customStyleMap,
         customStyleFn,
         decorator,
