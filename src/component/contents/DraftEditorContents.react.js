@@ -89,6 +89,7 @@ class DraftEditorContents extends React.Component {
       blockRendererFn,
       blockStyleFn,
       customStyleMap,
+      customStyleFn,
       editorState,
     } = this.props;
 
@@ -113,6 +114,7 @@ class DraftEditorContents extends React.Component {
         blockRendererFn={blockRendererFn}
         blockRenderMap={blockRenderMap}
         customStyleMap={customStyleMap}
+        customStyleFn={customStyleFn}
         content={content}
         getBlockTree={editorState.getBlockTree.bind(editorState)}
         getBlockChildren={content.getBlockChildren.bind(content)}
