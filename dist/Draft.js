@@ -657,6 +657,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	function updateSelection(editorState, selection, forceSelection) {
+	  // Only unset the nativelyRenderedContent and inlineStyleOverride if the
+	  // position is different
+	  //https://github.com/facebook/draft-js/pull/1176
+	  //https://github.com/facebook/draft-js/pull/1176/commits/ce2893a4f6578d8da0a3cec298e05abb5ebf945f
+	  var editorSelection = editorState.getSelection();
+	  if (editorSelection.getAnchorKey() === selection.getAnchorKey() && editorSelection.getAnchorOffset() === selection.getAnchorOffset() && editorSelection.getFocusKey() === selection.getFocusKey() && editorSelection.getFocusOffset() === selection.getFocusOffset() && editorSelection.getIsBackward() === selection.getIsBackward()) {
+	    return EditorState.set(editorState, {
+	      selection: selection,
+	      forceSelection: forceSelection
+	    });
+	  }
+
 	  return EditorState.set(editorState, {
 	    selection: selection,
 	    forceSelection: forceSelection,
@@ -7357,7 +7369,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      }
 
-	      child = React.createElement(Element, childProps, React.createElement(Component, componentProps));
+	      if (Element === 'custom') {
+	        componentProps.childProps = childProps;
+	        child = React.createElement(Component, componentProps);
+	      } else {
+	        child = React.createElement(Element, childProps, React.createElement(Component, componentProps));
+	      }
 
 	      if (componentTemplate) {
 	        currentWrappedBlocks = [];

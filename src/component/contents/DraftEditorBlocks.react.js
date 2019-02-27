@@ -145,11 +145,12 @@ class DraftEditorBlocks extends React.Component {
         };
       }
 
-      child = React.createElement(
-        Element,
-        childProps,
-        <Component {...componentProps} />,
-      );
+      if (Element === 'custom') {
+        componentProps.childProps = childProps;
+        child = React.createElement(Component, componentProps);
+      } else {
+        child = React.createElement(Element, childProps, <Component {...componentProps} />);
+      }
 
       if (componentTemplate) {
         currentWrappedBlocks = [];
