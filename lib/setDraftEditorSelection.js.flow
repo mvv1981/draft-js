@@ -153,7 +153,11 @@ function setDraftEditorSelection(selectionState: SelectionState, node: Node, blo
 
       selection.removeAllRanges();
       addPointToSelection(selection, node, anchorOffset - nodeStart, selectionState);
-      addFocusToSelection(selection, storedFocusNode, storedFocusOffset, selectionState);
+
+      // If selection has focusNode. Case when focus is off the editor.
+      if (storedFocusNode) {
+        addFocusToSelection(selection, storedFocusNode, storedFocusOffset, selectionState);
+      }
     }
   }
 }
@@ -223,6 +227,7 @@ function addFocusToSelection(selection: Object, node: Node, offset: number, sele
     // Additionally, clone the selection range. IE11 throws an
     // InvalidStateError when attempting to access selection properties
     // after the range is detached.
+
     var range = selection.getRangeAt(0);
     range.setEnd(node, offset);
     selection.addRange(range.cloneRange());

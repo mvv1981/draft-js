@@ -215,12 +215,16 @@ function setDraftEditorSelection(
         anchorOffset - nodeStart,
         selectionState,
       );
-      addFocusToSelection(
-        selection,
-        storedFocusNode,
-        storedFocusOffset,
-        selectionState,
-      );
+
+      // If selection has focusNode. Case when focus is off the editor.
+      if (storedFocusNode) {
+        addFocusToSelection(
+          selection,
+          storedFocusNode,
+          storedFocusOffset,
+          selectionState,
+        );
+      }
     }
   }
 }
