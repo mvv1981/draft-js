@@ -21,6 +21,19 @@ const containsNode = require('containsNode');
 const getActiveElement = require('getActiveElement');
 const invariant = require('invariant');
 
+/**
+ * Bugfix: https://stackoverflow.com/questions/22914075/javascript-error-800a025e-using-range-selector
+ */
+function protectedRemoveAllRanges(selection) {
+  if (document.body.createTextRange) { // All IE but Edge
+    var range = document.body.createTextRange();
+    range.collapse();
+    range.select();
+  } else {
+    selection.removeAllRanges();
+  }
+}
+
 function getAnonymizedDOM(
   node: Node,
   getNodeLabels?: (n: Node) => Array<string>,
@@ -147,7 +160,7 @@ function setDraftEditorSelection(
   // If the selection is entirely bound within this node, set the selection
   // and be done.
   if (hasAnchor && hasFocus) {
-    selection.removeAllRanges();
+    protectedRemoveAllRanges(selection);
     addPointToSelection(
       selection,
       node,
@@ -166,7 +179,7 @@ function setDraftEditorSelection(
   if (!isBackward) {
     // If the anchor is within this node, set the range start.
     if (hasAnchor) {
-      selection.removeAllRanges();
+      protectedRemoveAllRanges(selection);
       addPointToSelection(
         selection,
         node,
@@ -191,7 +204,7 @@ function setDraftEditorSelection(
     // collapsed range beginning here. Later, when we encounter the anchor,
     // we'll use this information to extend the selection.
     if (hasFocus) {
-      selection.removeAllRanges();
+      protectedRemoveAllRanges(selection);
       addPointToSelection(
         selection,
         node,
@@ -208,7 +221,7 @@ function setDraftEditorSelection(
       var storedFocusNode = selection.focusNode;
       var storedFocusOffset = selection.focusOffset;
 
-      selection.removeAllRanges();
+      protectedRemoveAllRanges(selection);
       addPointToSelection(
         selection,
         node,
