@@ -120,7 +120,7 @@ function insertFragmentIntoContentState(
           newBlockArr.push(modifiedHead);
           var keysMap = {};
 
-          if (fragment.first().getType() !== 'paragraph') {
+          if (fragment.first().getType() !== 'unstyled') {
               keysMap[fragment.key] = modifiedHead.getKey();
           }
 
