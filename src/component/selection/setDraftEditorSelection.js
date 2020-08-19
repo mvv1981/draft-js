@@ -25,13 +25,48 @@ const invariant = require('invariant');
  * Bugfix: https://stackoverflow.com/questions/22914075/javascript-error-800a025e-using-range-selector
  */
 function protectedRemoveAllRanges(selection) {
-  if (document.body.createTextRange) { // All IE but Edge
-    var range = document.body.createTextRange();
-    range.collapse();
-    range.select();
+  const isAllIeButEdge = document.body.createTextRange;
+  const willCrashInIE =
+    selection.rangeCount === 0 ||
+    selection.getRangeAt(0).getClientRects().length === 0;
+
+  if (isAllIeButEdge && willCrashInIE) {
+    window.getSelection().removeAllRanges();
   } else {
     selection.removeAllRanges();
   }
+}
+
+// This magic works and no one word can be excluded.
+function resetIESelection() {
+  const target = document.createElement('div');
+  target.style.position = 'absolute';
+  document.body.appendChild(target);
+
+  window.getSelection().removeAllRanges();
+  const range2 = document.createRange();
+  try {
+    window.getSelection().addRange(range2);
+  } catch (error) {}
+
+  document.body.removeChild(target);
+}
+
+function protectedAddRage(selection, range) {
+  const isItIE = document.body.createTextRange;
+  if (isItIE) {
+    const selectionHasNoRanges = selection.rangeCount === 0 ||selection.getRangeAt(0).getClientRects().length === 0;
+    const emptyRange = range.startOffset === range.endOffset;
+    const noAnchorAndFocus = !selection.anchorNode && !selection.focusNode;
+    const isIECrashes = selectionHasNoRanges && emptyRange && noAnchorAndFocus;
+    if (isIECrashes) {
+      resetIESelection();
+      window.getSelection().addRange(range);
+      return;
+    }
+  }
+
+  selection.addRange(range);
 }
 
 function getAnonymizedDOM(
@@ -347,7 +382,7 @@ function addFocusToSelection(
     if (selection.rangeCount > 0) {
       var range = selection.getRangeAt(0);
       range.setEnd(node, offset);
-      selection.addRange(range.cloneRange());
+      protectedAddRage(selection, range.cloneRange());
     }
   }
 }
@@ -369,7 +404,7 @@ function addPointToSelection(
     });
   }
   range.setStart(node, offset);
-  selection.addRange(range);
+  protectedAddRage(selection, range.cloneRange());
 }
 
 module.exports = setDraftEditorSelection;
