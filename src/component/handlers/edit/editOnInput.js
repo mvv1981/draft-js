@@ -66,6 +66,7 @@ function editOnInput(editor: DraftEditor): void {
   }
 
   if (
+    !isGecko &&
     anchorNode.nodeType === Node.TEXT_NODE &&
     (anchorNode.previousSibling !== null || anchorNode.nextSibling !== null)
   ) {
@@ -73,6 +74,10 @@ function editOnInput(editor: DraftEditor): void {
     // nodes into two. Why? No one knows. This commit is suspicious:
     // https://chromium.googlesource.com/chromium/src/+/a3b600981286b135632371477f902214c55a1724
     // To work around, we'll merge the sibling text nodes back into this one.
+
+    // But not for Gecko, because the native selector below gets confused
+    // and the text nodes are glued together automatically after a short time.
+    // This is possible in Gecko only for a text node with text-align: justify and white-space: normal
     const span = anchorNode.parentNode;
     anchorNode.nodeValue = span.textContent;
     for (
