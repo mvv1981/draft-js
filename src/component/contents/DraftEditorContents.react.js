@@ -17,6 +17,7 @@ const DraftEditorBlocks = require('DraftEditorBlocks.react');
 const EditorState = require('EditorState');
 const React = require('React');
 const nullthrows = require('nullthrows');
+const fastDeepEqual = require('fastDeepEqual');
 
 import type ContentBlock from 'ContentBlock';
 
@@ -36,6 +37,10 @@ type Props = {
  * the contents of the editor.
  */
 class DraftEditorContents extends React.Component {
+  _prevEditorState: EditorState = null;
+
+  _blockMapTree = null;
+
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -83,6 +88,48 @@ class DraftEditorContents extends React.Component {
     );
   }
 
+  componentDidUpdate(
+    prevProps: Readonly<P>,
+    prevState: Readonly<S>,
+    snapshot: SS,
+  ) {
+    this._prevEditorState = this.props.editorState;
+  }
+
+  getBlockMapTree() {
+    const content = this.props.editorState.getCurrentContent();
+
+    if (!this._prevEditorState) {
+      this._blockMapTree = content.getBlockDescendants();
+    }
+
+    if (this._prevEditorState) {
+      const prevContent = this._prevEditorState.getCurrentContent();
+
+      if (this._blockMapTree && content !== prevContent) {
+        const prevBlockMapTree = this._blockMapTree;
+        this._blockMapTree = content.getBlockDescendants();
+
+        this._blockMapTree.toKeyedSeq().forEach((currentTreeValue, key) => {
+          if (key === '__ROOT__') {
+            return;
+          }
+
+          const prevTreeValue = prevBlockMapTree.get(key);
+
+          if (
+            prevTreeValue &&
+            fastDeepEqual(currentTreeValue.toJS(), prevTreeValue.toJS())
+          ) {
+            this._blockMapTree = this._blockMapTree.set(key, prevTreeValue);
+          }
+        });
+      }
+    }
+
+    return this._blockMapTree;
+  }
+
   render(): React.Element<any> {
     const {
       blockRenderMap,
@@ -98,7 +145,8 @@ class DraftEditorContents extends React.Component {
     const forceSelection = editorState.mustForceSelection();
     const decorator = editorState.getDecorator();
     const directionMap = nullthrows(editorState.getDirectionMap());
-    const blockMapTree = content.getBlockDescendants();
+    const blockMapTree = this.getBlockMapTree();
+
     const blockMap = blockMapTree.getIn(['__ROOT__', 'firstLevelBlocks']);
 
     return (

@@ -12,6 +12,7 @@ module.exports = Object.assign(
     immutable: 'immutable',
     React: 'react',
     ReactDOM: 'react-dom',
+    fastDeepEqual: 'fast-deep-equal',
     'object-assign': 'object-assign',
 
     ReactTestUtils: 'react-dom/lib/ReactTestUtils',

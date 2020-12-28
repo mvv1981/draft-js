@@ -82,6 +82,13 @@ var buildDist = function(opts) {
         commonjs: 'immutable',
         amd: 'immutable',
       },
+      //fast-deep-equal
+      'fast-deep-equal': {
+        root: 'fastDeepEqual',
+        commonjs2: 'fast-deep-equal',
+        commonjs: 'fast-deep-equal',
+        amd: 'fast-deep-equal',
+      },
       react: {
         root: 'React',
         commonjs2: 'react',
