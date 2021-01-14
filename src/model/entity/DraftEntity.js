@@ -60,6 +60,8 @@ export type DraftEntityMapObject = {
     newData: {[key: string]: any},
   ) => DraftEntityInstance,
 
+  __getAll: () => Map<string, DraftEntityInstance>,
+
   __getLastCreatedEntityKey: () => string,
 
   __create: (
@@ -188,6 +190,13 @@ var DraftEntity: DraftEntityMapObject = {
   // ***********************************WARNING******************************
   // --- the above public API will be deprecated in the next version of Draft!
   // The methods below this line are private - don't call them directly.
+
+  /**
+   * Get all the entities in the content state.
+   */
+  __getAll: function(): Map<string, DraftEntityInstance> {
+    return instances;
+  },
 
   /**
    * Get the random key string from whatever entity was last created.
